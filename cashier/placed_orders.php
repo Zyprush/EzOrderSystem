@@ -42,7 +42,14 @@ if (isset($_GET['delete'])) {
 
    <!-- custom css file link  -->
    <link rel="stylesheet" href="../css/admin_style.css">
-
+   <style>
+      @media print {
+         body {
+            width: 2.25in;
+            /* Adjust other styles as needed */
+         }
+      }
+   </style>
 </head>
 
 <body>
@@ -76,12 +83,35 @@ if (isset($_GET['delete'])) {
                         <option value="pending">pending</option>
                         <option value="completed">completed</option>
                      </select>
-                     <div class="flex-btn">
+                     <div class="flex-btn1">
                         <input type="submit" value="update" class="btn" name="update_payment">
                         <a href="placed_orders.php?delete=<?= $fetch_orders['id']; ?>" class="delete-btn" onclick="return confirm('delete this order?');">delete</a>
+                        <a href="#" class="delete-btn" onclick="printOrder(<?= $fetch_orders['id']; ?>, '<?= $fetch_orders['placed_on']; ?>', '<?= $fetch_orders['address']; ?>', '<?= $fetch_orders['total_products']; ?>', '<?= $fetch_orders['total_price']; ?>', '<?= $fetch_orders['method']; ?>');">Print</a>
                      </div>
                   </form>
                </div>
+
+               <script>
+                  function printOrder(orderId, placedOn, tableNumber, totalProducts, totalPrice, paymentMethod) {
+                     var printWindow = window.open('', '_blank');
+                     printWindow.document.write('<html><head><title>***Store Name***</title></head><body>');
+
+                     // Add the order details to the print window
+                     printWindow.document.write('<h1>Order Details</h1>');
+                     printWindow.document.write('<p>Place on: ' + placedOn + '</p>');
+                     printWindow.document.write('<p>Table Number: ' + tableNumber + '</p>');
+                     printWindow.document.write('<p>Total Products: ' + totalProducts + '</p>');
+                     printWindow.document.write('<p>Total Price: ₱' + totalPrice + '</p>');
+                     printWindow.document.write('<p>Payment Method: ' + paymentMethod + '</p>');
+
+                     printWindow.document.write('<h5> Thank you, Come Again! <3 </h5>');
+
+                     printWindow.document.write('</body></html>');
+                     printWindow.print();
+                     printWindow.close();
+                     return false; // Prevent the default behavior of the "a" tag
+                  }
+               </script>
          <?php
             }
          } else {

@@ -4,9 +4,9 @@ include 'components/connect.php';
 
 session_start();
 
-if(isset($_SESSION['user_id'])){
+if (isset($_SESSION['user_id'])) {
    $user_id = $_SESSION['user_id'];
-}else{
+} else {
    $user_id = '';
    header('location:home.php');
 };
@@ -15,6 +15,7 @@ if(isset($_SESSION['user_id'])){
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,30 +27,29 @@ if(isset($_SESSION['user_id'])){
 
    <!-- custom css file link  -->
    <link rel="stylesheet" href="css/style.css">
+   <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
 
 </head>
+
 <body>
-   
-<!-- header section starts  -->
-<?php include 'components/user_header.php'; ?>
-<!-- header section ends -->
 
-<section class="user-details">
+   <!-- header section starts  -->
+   <?php include 'components/user_header.php'; ?>
+   <!-- header section ends -->
 
-   <div class="user">
-      <?php
-         
-      ?>
-      <img src="images/user-icon.png" alt="">
-      <p><i class="fas fa-user"></i><span><span><?= $fetch_profile['name']; ?></span></span></p>
-      <p><i class="fas fa-phone"></i><span><?= $fetch_profile['number']; ?></span></p>
-      <p><i class="fas fa-envelope"></i><span><?= $fetch_profile['email']; ?></span></p>
-      <a href="update_profile.php" class="btn">update info</a>
-      <p class="address"><i class="fas fa-map-marker-alt"></i><span><?php if($fetch_profile['address'] == ''){echo 'please enter your address';}else{echo $fetch_profile['address'];} ?></span></p>
-      <a href="update_address.php" class="btn">update address</a>
-   </div>
+   <section class="user-details">
 
-</section>
+      <div class="user">
+         <?php
+
+         ?>
+         <img src="images/user-icon.png" alt="">
+         <p><i class="fas fa-user"></i><span><span><?= $fetch_profile['name']; ?></span></span></p>
+         <p><i class="fas fa-envelope"></i><span><?= $fetch_profile['email']; ?></span></p>
+         <a href="update_profile.php" class="btn">update info</a>
+      </div>
+
+   </section>
 
 
 
@@ -60,7 +60,7 @@ if(isset($_SESSION['user_id'])){
 
 
 
-<?php include 'components/footer.php'; ?>
+   <?php include 'components/footer.php'; ?>
 
 
 
@@ -68,8 +68,9 @@ if(isset($_SESSION['user_id'])){
 
 
 
-<!-- custom js file link  -->
-<script src="js/script.js"></script>
+   <!-- custom js file link  -->
+   <script src="js/script.js"></script>
 
 </body>
+
 </html>

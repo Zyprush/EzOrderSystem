@@ -39,6 +39,7 @@ if (isset($_POST['send'])) {
 
     <!-- custom css file link  -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
     <style>
         .rating:not(:checked)>input {
             position: absolute;

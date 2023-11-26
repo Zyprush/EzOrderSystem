@@ -30,6 +30,7 @@ include 'components/add_cart.php';
 
    <!-- custom css file link  -->
    <link rel="stylesheet" href="css/style.css">
+   <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
 
 </head>
 
@@ -46,7 +47,7 @@ include 'components/add_cart.php';
             <div class="swiper-slide slide">
                <div class="content">
                   <span>Buy now !</span>
-                  <h3>delicious pizza</h3>
+                  <h3>Delicious pizza</h3>
                   <a href="menu.php" class="btn">see menus</a>
                </div>
                <div class="image">
@@ -57,7 +58,7 @@ include 'components/add_cart.php';
             <div class="swiper-slide slide">
                <div class="content">
                   <span>Buy now !</span>
-                  <h3>chezzy hamburger</h3>
+                  <h3>Chezzy hamburger</h3>
                   <a href="menu.php" class="btn">see menus</a>
                </div>
                <div class="image">
@@ -68,7 +69,7 @@ include 'components/add_cart.php';
             <div class="swiper-slide slide">
                <div class="content">
                   <span>Buy now !</span>
-                  <h3>rosted chicken</h3>
+                  <h3>Rosted chicken</h3>
                   <a href="menu.php" class="btn">see menus</a>
                </div>
                <div class="image">

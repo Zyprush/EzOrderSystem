@@ -62,6 +62,7 @@ if (isset($_POST['submit'])) {
 
    <!-- custom css file link  -->
    <link rel="stylesheet" href="css/style.css">
+   <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
 
 </head>
 

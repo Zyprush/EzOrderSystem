@@ -4,13 +4,13 @@ include 'components/connect.php';
 
 session_start();
 
-if(isset($_SESSION['user_id'])){
+if (isset($_SESSION['user_id'])) {
    $user_id = $_SESSION['user_id'];
-}else{
+} else {
    $user_id = '';
 };
 
-if(isset($_POST['submit'])){
+if (isset($_POST['submit'])) {
 
    $email = $_POST['email'];
    $email = filter_var($email, FILTER_SANITIZE_STRING);
@@ -21,19 +21,19 @@ if(isset($_POST['submit'])){
    $select_user->execute([$email, $pass]);
    $row = $select_user->fetch(PDO::FETCH_ASSOC);
 
-   if($select_user->rowCount() > 0){
+   if ($select_user->rowCount() > 0) {
       $_SESSION['user_id'] = $row['id'];
       header('location:home.php');
-   }else{
+   } else {
       $message[] = 'incorrect username or password!';
    }
-
 }
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -45,27 +45,26 @@ if(isset($_POST['submit'])){
 
    <!-- custom css file link  -->
    <link rel="stylesheet" href="css/style.css">
-
+   <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
 </head>
+
 <body>
-   
-<!-- header section starts  -->
-<?php include 'components/user_header.php'; ?>
-<!-- header section ends -->
 
-<section class="form-container">
+   <!-- header section starts  -->
+   <?php include 'components/user_header.php'; ?>
+   <!-- header section ends -->
 
-   <form action="" method="post">
-      <h3>login now</h3>
-      <input type="email" name="email" required placeholder="enter your email" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="password" name="pass" required placeholder="enter your password" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="submit" value="login now" name="submit" class="btn">
-      <p>don't have an account? <a href="register.php">register now</a></p>
-   </form>
+   <section class="form-container">
 
-</section>
+      <form action="" method="post">
+         <h3>login now</h3>
+         <input type="email" name="email" required placeholder="enter your email" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
+         <input type="password" name="pass" required placeholder="enter your password" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
+         <input type="submit" value="login now" name="submit" class="btn">
+         <p>don't have an account? <a href="register.php">register now</a></p>
+      </form>
 
-
+   </section>
 
 
 
@@ -75,15 +74,18 @@ if(isset($_POST['submit'])){
 
 
 
-<?php include 'components/footer.php'; ?>
+
+
+   <?php include 'components/footer.php'; ?>
 
 
 
 
 
 
-<!-- custom js file link  -->
-<script src="js/script.js"></script>
+   <!-- custom js file link  -->
+   <script src="js/script.js"></script>
 
 </body>
+
 </html>
