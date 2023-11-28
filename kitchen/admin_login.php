@@ -6,23 +6,34 @@ session_start();
 
 if (isset($_POST['submit'])) {
 
-   $name = $_POST['name'];
-   $name = filter_var($name, FILTER_SANITIZE_STRING);
-   $pass = sha1($_POST['pass']);
-   $pass = filter_var($pass, FILTER_SANITIZE_STRING);
+    $name = $_POST['name'];
+    $name = filter_var($name, FILTER_SANITIZE_STRING);
+    $pass = sha1($_POST['pass']);
+    $pass = filter_var($pass, FILTER_SANITIZE_STRING);
 
-   $select_admin = $conn->prepare("SELECT * FROM `admin` WHERE name = ? AND password = ?");
-   $select_admin->execute([$name, $pass]);
+    // Validate login for 'admin' table
+    $select_admin = $conn->prepare("SELECT * FROM `admin` WHERE name = ? AND password = ?");
+    $select_admin->execute([$name, $pass]);
 
-   if ($select_admin->rowCount() > 0) {
-      $fetch_admin_id = $select_admin->fetch(PDO::FETCH_ASSOC);
-      $_SESSION['admin_id'] = $fetch_admin_id['id'];
-      header('location:dashboard.php');
-   } else {
-      $message[] = 'incorrect username or password!';
-   }
+    // Validate login for 'kitchen' table
+    $select_kitchen = $conn->prepare("SELECT * FROM `kitchen` WHERE name = ? AND password = ?");
+    $select_kitchen->execute([$name, $pass]);
+
+    if ($select_admin->rowCount() > 0 || $select_kitchen->rowCount() > 0) {
+        $fetch_admin_id = $select_admin->fetch(PDO::FETCH_ASSOC);
+        $fetch_kitchen_id = $select_kitchen->fetch(PDO::FETCH_ASSOC);
+
+        if ($fetch_admin_id) {
+            $_SESSION['admin_id'] = $fetch_admin_id['id'];
+            header('location: dashboard.php');
+        } elseif ($fetch_kitchen_id) {
+            $_SESSION['kitchen_id'] = $fetch_kitchen_id['id'];
+            header('location: dashboard.php');
+        }
+    } else {
+        $message[] = 'Incorrect username or password!';
+    }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -71,16 +82,6 @@ if (isset($_POST['submit'])) {
    </section>
 
    <!-- admin login form section ends -->
-
-
-
-
-
-
-
-
-
-
 
 </body>
 

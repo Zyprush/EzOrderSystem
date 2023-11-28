@@ -20,7 +20,6 @@ if (isset($message)) {
         <nav class="navbar">
             <a href="dashboard.php">Home</a>
             <a href="placed_orders.php">Orders</a>
-            <a href="ratings.php">Ratings</a>
         </nav>
 
         <div class="icons">
@@ -30,13 +29,31 @@ if (isset($message)) {
 
         <div class="profile">
             <?php
-            $select_profile = $conn->prepare("SELECT * FROM `admin` WHERE id = ?");
-            $select_profile->execute([$admin_id]);
-            $fetch_profile = $select_profile->fetch(PDO::FETCH_ASSOC);
-            ?>
+            // Fetch profile information for admin
+            $select_admin_profile = $conn->prepare("SELECT * FROM `admin` WHERE id = ?");
+            $select_admin_profile->execute([$admin_id]);
+            $fetch_admin_profile = $select_admin_profile->fetch(PDO::FETCH_ASSOC);
+
+            // Fetch profile information for cashier
+            $select_cashier_profile = $conn->prepare("SELECT * FROM `cashier` WHERE id = ?");
+            $select_cashier_profile->execute([$cashier_id]);
+            $fetch_cashier_profile = $select_cashier_profile->fetch(PDO::FETCH_ASSOC);
+
+            // Check if the admin profile exists
+            if ($fetch_admin_profile) {
+                $fetch_profile = $fetch_admin_profile;
+            } elseif ($fetch_cashier_profile) {
+                $fetch_profile = $fetch_cashier_profile;
+            } else {
+                // Handle the case where none of the profiles are found
+                // You may redirect or display an error message
+                echo "Profile not found.";
+            }
+        ?>
+
             <p><?= $fetch_profile['name']; ?></p>
-            <a href="update_profile.php" class="btn">update profile</a>
-            <a href="../components/admin_logout.php" onclick="return confirm('logout from this website?');" class="delete-btn">logout</a>
+            <a href="../components/admin_logout.php" onclick="return confirm('logout from this website?');"
+                class="delete-btn">logout</a>
         </div>
 
     </section>

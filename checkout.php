@@ -11,14 +11,27 @@ if (isset($_SESSION['user_id'])) {
    header('location:kiosk.php');
 };
 
+$payment = 'pending';
+
+// Check if the orders table exists, if not, create it
+$table_check = $conn->query("SHOW TABLES LIKE 'orders'");
+if ($table_check->rowCount() == 0) {
+   $create_orders_table = $conn->query("CREATE TABLE orders (
+      id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+      user_id INT(11),
+      method VARCHAR(50),
+      address VARCHAR(100),
+      total_products TEXT,
+      total_price DECIMAL(10,2),
+      quantity_sold INT(11), /* Add new column for quantity sold */
+      payment_status TEXT,
+      placed_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   )");
+}
+
 if (isset($_POST['submit'])) {
 
-   $name = $_POST['name'];
-   $name = filter_var($name, FILTER_SANITIZE_STRING);
-   $number = $_POST['number'];
-   $number = filter_var($number, FILTER_SANITIZE_STRING);
-   $email = $_POST['email'];
-   $email = filter_var($email, FILTER_SANITIZE_STRING);
+   // Retrieve order details
    $method = $_POST['method'];
    $method = filter_var($method, FILTER_SANITIZE_STRING);
    $address = $_POST['address'];
@@ -26,38 +39,54 @@ if (isset($_POST['submit'])) {
    $total_products = $_POST['total_products'];
    $total_price = $_POST['total_price'];
 
-   $check_cart = $conn->prepare("SELECT * FROM `cart` WHERE user_id = ?");
-   $check_cart->execute([$user_id]);
+   // Fetch cart items
+   $cart_items = [];
+   $select_cart = $conn->prepare("SELECT * FROM `cart` WHERE user_id = ?");
+   $select_cart->execute([$user_id]);
+   if ($select_cart->rowCount() > 0) {
+      while ($fetch_cart = $select_cart->fetch(PDO::FETCH_ASSOC)) {
+         // Retrieve cart item details
+         $cart_items[] = $fetch_cart;
+      }
+   }
 
-   if ($check_cart->rowCount() > 0) {
+   if (!empty($cart_items)) {
+      $conn->beginTransaction();
 
-      $insert_order = $conn->prepare("INSERT INTO `orders`(user_id, name, number, email, method, address, total_products, total_price) VALUES(?,?,?,?,?,?,?,?)");
-      $insert_order->execute([$user_id, $name, $number, $email, $method, $address, $total_products, $total_price]);
+      try {
+         // Loop through cart items and update quantity_available in the products table
+         foreach ($cart_items as $item) {
+            $update_quantity = $conn->prepare("UPDATE `products` SET quantity_available = quantity_available - ? WHERE id = ?");
+            $update_quantity->execute([$item['quantity'], $item['pid']]);
+         }
 
-      $delete_cart = $conn->prepare("DELETE FROM `cart` WHERE user_id = ?");
-      $delete_cart->execute([$user_id]);
+         // Sum up the total quantity sold
+         $total_quantity_sold = array_sum(array_column($cart_items, 'quantity'));
 
-      $message[] = 'order placed successfully!';
+         // Insert order into the orders table along with the quantity sold
+         $insert_order = $conn->prepare("INSERT INTO `orders`(user_id, method, address, total_products, total_price, quantity_sold, payment_status) VALUES(?,?,?,?,?,?,?)");
+         $insert_order->execute([$user_id, $method, $address, $total_products, $total_price, $total_quantity_sold, $payment]);
 
-      header('Location: thanks.php');
-      /*if ($address == '') {
-         $message[] = 'please add your address!';
-      } else {
-
-         $insert_order = $conn->prepare("INSERT INTO `orders`(user_id, name, number, email, method, address, total_products, total_price) VALUES(?,?,?,?,?,?,?,?)");
-         $insert_order->execute([$user_id, $name, $number, $email, $method, $address, $total_products, $total_price]);
-
+         // Clear the cart for the user
          $delete_cart = $conn->prepare("DELETE FROM `cart` WHERE user_id = ?");
          $delete_cart->execute([$user_id]);
 
-         $message[] = 'order placed successfully!';
-      }*/
+         $conn->commit();
+         $message[] = 'Order placed successfully!';
+         header('Location: thanks.php');
+      } catch (PDOException $e) {
+         $conn->rollBack();
+         $message[] = 'An error occurred. Please try again later.';
+      }
    } else {
-      $message[] = 'your cart is empty';
+      $message[] = 'Your cart is empty';
    }
 }
 
 ?>
+
+<!-- rest of the HTML remains the same -->
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -120,14 +149,12 @@ if (isset($_POST['submit'])) {
          <input type="hidden" name="total_products" value="<?= $total_products; ?>">
          <input type="hidden" name="total_price" value="<?= $grand_total; ?>" value="">
          <input type="hidden" name="name" value="<?= $fetch_profile['name'] ?>">
-         <input type="hidden" name="number" value="<?= $fetch_profile['number'] ?>">
-         <input type="hidden" name="email" value="<?= $fetch_profile['email'] ?>">
-         <input type="hidden" name="address" value="<?= $fetch_profile['address'] ?>">
+         <input type="hidden" name="payment_status" value="pending">
 
          <div class="user-info">
             <select name="address" id="#" class="box" required>
                <option value="" disabled selected>Select Table</option>
-               <option value="10">Take Out</option>
+               <option value="Take Out">Take Out</option>
                <option value="1">1</option>
                <option value="2">2</option>
                <option value="3">3</option>
@@ -157,22 +184,9 @@ if (isset($_POST['submit'])) {
 
    </section>
 
-
-
-
-
-
-
-
-
    <!-- footer section starts  -->
    <?php include 'components/footer.php'; ?>
    <!-- footer section ends -->
-
-
-
-
-
 
    <!-- custom js file link  -->
    <script src="js/script.js"></script>

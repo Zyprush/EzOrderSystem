@@ -32,3 +32,10 @@ document.querySelectorAll('input[type="number"]').forEach(numberInput => {
       if(numberInput.value.length > numberInput.maxLength) numberInput.value = numberInput.value.slice(0, numberInput.maxLength);
    };
 });
+
+
+// Get the element by its ID
+let userBtn = document.getElementById('user-btn');
+
+// Hide the element using JavaScript
+userBtn.hidden = true; // This line hides the element

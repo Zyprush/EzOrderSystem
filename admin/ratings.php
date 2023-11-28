@@ -23,32 +23,56 @@ if (isset($_GET['delete'])) {
 <html lang="en">
 
 <head>
-   <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Ratings</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ratings</title>
 
-   <!-- Bootstrap CSS link -->
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="../css/admin_style.css">
 
-   <!-- custom css file link  -->
-   <link rel="stylesheet" href="../css/admin_style.css">
+    <style>
+    /* Style for progress bar */
+    .progress {
+        height: 20px;
+        /* Set progress bar height */
+        margin-top: 10px;
+        /* Adjust margin as per design */
+        overflow: hidden;
+        /* Hide overflow */
+        background-color: #e9ecef;
+        /* Set background color */
+        border-radius: 4px;
+        /* Add border radius */
+    }
+
+    .progress-bar {
+        background-color: #28a745;
+        /* Set progress bar color */
+        width: 0;
+        /* Initial width before animation */
+        transition: width 0.5s ease-in-out;
+        /* Add transition for animation */
+        height: 100%;
+        /* Set height */
+    }
+    </style>
 
 </head>
 
 <body>
 
-   <?php include '../components/admin_header.php' ?>
+    <?php include '../components/admin_header.php' ?>
 
-   <!-- ratings section starts  -->
+    <!-- ratings section starts  -->
 
-   <section class="ratings">
+    <section class="ratings">
 
-      <h1 class="heading">Ratings</h1>
+        <h1 class="heading">Ratings</h1>
 
-      <div class="box-container">
+        <div class="box-container">
 
-         <?php
+            <?php
          $defaultRatings = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
 
          $select_ratings = $conn->prepare("SELECT rate, COUNT(*) as count FROM `ratings` GROUP BY rate");
@@ -67,29 +91,30 @@ if (isset($_GET['delete'])) {
             $starString = str_repeat("★", $rating) . str_repeat("☆", 5 - $rating); // Unicode stars
          ?>
             <div class="box">
-               <p style="font-size: 2.5rem;"><?= $starString; ?>: <span><?= $count; ?> rated</span></p>
-               <div class="progress">
-                  <div class="progress-bar bg-success" role="progressbar" style="width: <?= $percentage; ?>%;" aria-valuenow="<?= $percentage; ?>" aria-valuemin="0" aria-valuemax="100"></div>
-               </div>
+                <p style="font-size: 2.5rem;"><?= $starString; ?>: <span><?= $count; ?> rated</span></p>
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: <?= $percentage; ?>%;"
+                        aria-valuenow="<?= $percentage; ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
             </div>
-         <?php
+            <?php
          }
          ?>
 
-      </div>
+        </div>
 
-   </section>
+    </section>
 
-   <!-- ratings section ends -->
+    <!-- ratings section ends -->
 
-   <!-- Bootstrap JS and Popper.js script links -->
-   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-   <!-- Bootstrap JS link -->
-   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- Bootstrap JS and Popper.js script links -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <!-- Bootstrap JS link -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-   <!-- custom js file link  -->
-   <script src="../js/admin_script.js"></script>
+    <!-- custom js file link  -->
+    <script src="../js/admin_script.js"></script>
 
 </body>
 

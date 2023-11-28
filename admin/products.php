@@ -10,6 +10,16 @@ if (!isset($admin_id)) {
    header('location:admin_login.php');
 };
 
+// Create the 'products' table if it doesn't exist
+$create_table = $conn->query("CREATE TABLE IF NOT EXISTS `products` (
+   `id` INT AUTO_INCREMENT PRIMARY KEY,
+   `name` VARCHAR(255) NOT NULL,
+   `category` VARCHAR(255) NOT NULL,
+   `price` DECIMAL(10, 2) NOT NULL,
+   `image` VARCHAR(255) NOT NULL,
+   `quantity_available` INT NOT NULL DEFAULT 0
+)");
+
 if (isset($_POST['add_product'])) {
 
    $name = $_POST['name'];
@@ -18,6 +28,9 @@ if (isset($_POST['add_product'])) {
    $price = filter_var($price, FILTER_SANITIZE_STRING);
    $category = $_POST['category'];
    $category = filter_var($category, FILTER_SANITIZE_STRING);
+
+   $quantity = $_POST['quantity'];
+   $quantity = filter_var($quantity, FILTER_VALIDATE_INT);
 
    $image = $_FILES['image']['name'];
    $image = filter_var($image, FILTER_SANITIZE_STRING);
@@ -36,8 +49,8 @@ if (isset($_POST['add_product'])) {
       } else {
          move_uploaded_file($image_tmp_name, $image_folder);
 
-         $insert_product = $conn->prepare("INSERT INTO `products`(name, category, price, image) VALUES(?,?,?,?)");
-         $insert_product->execute([$name, $category, $price, $image]);
+         $insert_product = $conn->prepare("INSERT INTO `products`(name, category, price, image, quantity_available) VALUES(?,?,?,?,?)");
+         $insert_product->execute([$name, $category, $price, $image, $quantity]);
 
          $message[] = 'new product added!';
       }
@@ -64,94 +77,94 @@ if (isset($_GET['delete'])) {
 <html lang="en">
 
 <head>
-   <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>products</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>products</title>
 
-   <!-- font awesome cdn link  -->
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
-   <!-- custom css file link  -->
-   <link rel="stylesheet" href="../css/admin_style.css">
-
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="../css/admin_style.css">
+<style>
+   .quantity {
+      font-size: 1.5rem;
+   }
+</style>
 </head>
 
 <body>
 
-   <?php include '../components/admin_header.php' ?>
+    <?php include '../components/admin_header.php' ?>
 
-   <!-- add products section starts  -->
+    <!-- add products section starts  -->
 
-   <section class="add-products">
+    <section class="add-products">
 
-      <form action="" method="POST" enctype="multipart/form-data">
-         <h3>add product</h3>
-         <input type="text" required placeholder="enter product name" name="name" maxlength="100" class="box">
-         <input type="number" min="0" max="9999999999" required placeholder="enter product price" name="price" onkeypress="if(this.value.length == 10) return false;" class="box">
-         <select name="category" class="box" required>
-            <option value="" disabled selected>select category --</option>
-            <option value="main dish">main dish</option>
-            <option value="fast food">fast food</option>
-            <option value="drinks">drinks</option>
-            <option value="desserts">desserts</option>
-         </select>
-         <input type="file" name="image" class="box" accept="image/jpg, image/jpeg, image/png, image/webp" required>
-         <input type="submit" value="add product" name="add_product" class="btn">
-      </form>
+        <form action="" method="POST" enctype="multipart/form-data">
+            <h3>add product</h3>
+            <input type="text" required placeholder="enter product name" name="name" maxlength="100" class="box">
+            <input type="number" min="0" max="9999999999" required placeholder="enter product price" name="price"
+                onkeypress="if(this.value.length == 10) return false;" class="box">
+            <select name="category" class="box" required>
+                <option value="" disabled selected>select category --</option>
+                <option value="main dish">main dish</option>
+                <option value="fast food">fast food</option>
+                <option value="drinks">drinks</option>
+                <option value="desserts">desserts</option>
+            </select>
+            <input type="number" min="0" max="9999999999" required placeholder="quantity available" name="quantity"
+                class="box">
+            <input type="file" name="image" class="box" accept="image/jpg, image/jpeg, image/png, image/webp" required>
+            <input type="submit" value="add product" name="add_product" class="btn">
+        </form>
 
-   </section>
+    </section>
 
-   <!-- add products section ends -->
+    <!-- add products section ends -->
 
-   <!-- show products section starts  -->
+    <!-- show products section starts  -->
 
-   <section class="show-products" style="padding-top: 0;">
+    <section class="show-products" style="padding-top: 0;">
 
-      <div class="box-container">
+    <div class="box-container">
 
-         <?php
-         $show_products = $conn->prepare("SELECT * FROM `products`");
-         $show_products->execute();
-         if ($show_products->rowCount() > 0) {
+        <?php
+        $show_products = $conn->prepare("SELECT * FROM `products`");
+        $show_products->execute();
+        if ($show_products->rowCount() > 0) {
             while ($fetch_products = $show_products->fetch(PDO::FETCH_ASSOC)) {
-         ?>
-               <div class="box">
-                  <img src="../uploaded_img/<?= $fetch_products['image']; ?>" alt="">
-                  <div class="flex">
-                     <div class="price"><span>₱</span><?= $fetch_products['price']; ?><span>/-</span></div>
-                     <div class="category"><?= $fetch_products['category']; ?></div>
-                  </div>
-                  <div class="name"><?= $fetch_products['name']; ?></div>
-                  <div class="flex-btn">
-                     <a href="update_product.php?update=<?= $fetch_products['id']; ?>" class="option-btn">update</a>
-                     <a href="products.php?delete=<?= $fetch_products['id']; ?>" class="delete-btn" onclick="return confirm('delete this product?');">delete</a>
-                  </div>
-               </div>
-         <?php
+        ?>
+                <div class="box">
+                    <img src="../uploaded_img/<?= $fetch_products['image']; ?>" alt="">
+                    <div class="flex">
+                        <div class="price"><span>₱</span><?= $fetch_products['price']; ?><span>/-</span></div>
+                        <div class="category"><?= $fetch_products['category']; ?></div>
+                    </div>
+                    <div class="name"><?= $fetch_products['name']; ?></div>
+                    <div class="quantity">Quantity Available: <?= $fetch_products['quantity_available']; ?></div>
+                    <div class="flex-btn">
+                        <a href="update_product.php?update=<?= $fetch_products['id']; ?>" class="option-btn">update</a>
+                        <a href="products.php?delete=<?= $fetch_products['id']; ?>" class="delete-btn" onclick="return confirm('delete this product?');">delete</a>
+                    </div>
+                </div>
+        <?php
             }
-         } else {
+        } else {
             echo '<p class="empty">no products added yet!</p>';
-         }
-         ?>
+        }
+        ?>
 
-      </div>
+    </div>
 
-   </section>
-
-   <!-- show products section ends -->
+</section>
 
 
+    <!-- show products section ends -->
 
-
-
-
-
-
-
-
-   <!-- custom js file link  -->
-   <script src="../js/admin_script.js"></script>
+    <!-- custom js file link  -->
+    <script src="../js/admin_script.js"></script>
 
 </body>
 

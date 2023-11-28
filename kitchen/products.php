@@ -4,11 +4,12 @@ include '../components/connect.php';
 
 session_start();
 
-$admin_id = $_SESSION['admin_id'];
+$admin_id = $_SESSION['admin_id'] ?? null;
+$kitchen_id = $_SESSION['kitchen_id'] ?? null;
 
-if (!isset($admin_id)) {
-   header('location:admin_login.php');
-};
+if (!isset($admin_id) && !isset($kitchen_id)) {
+   header('location: admin_login.php');
+}
 
 if (isset($_POST['add_product'])) {
 

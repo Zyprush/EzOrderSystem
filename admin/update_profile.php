@@ -1,61 +1,73 @@
 <?php
-
 include '../components/connect.php';
 
 session_start();
 
 $admin_id = $_SESSION['admin_id'];
 
-if(!isset($admin_id)){
+if (!isset($admin_id)) {
    header('location:admin_login.php');
 }
 
-if(isset($_POST['submit'])){
+// Fetch the account type and ID from the URL parameters
+if (isset($_GET['type']) && isset($_GET['id'])) {
+   $account_type = $_GET['type'];
+   $account_id = $_GET['id'];
 
-   $name = $_POST['name'];
-   $name = filter_var($name, FILTER_SANITIZE_STRING);
+   $allowed_account_types = ['admin', 'user', 'cashier', 'kitchen'];
 
-   if(!empty($name)){
-      $select_name = $conn->prepare("SELECT * FROM `admin` WHERE name = ?");
-      $select_name->execute([$name]);
-      if($select_name->rowCount() > 0){
-         $message[] = 'username already taken!';
-      }else{
-         $update_name = $conn->prepare("UPDATE `admin` SET name = ? WHERE id = ?");
-         $update_name->execute([$name, $admin_id]);
-      }
-   }
+   // Check if the provided account type is valid
+   if (in_array($account_type, $allowed_account_types)) {
+      if (isset($_POST['submit'])) {
+         $name = $_POST['name'];
+         $name = filter_var($name, FILTER_SANITIZE_STRING);
 
-   $empty_pass = 'da39a3ee5e6b4b0d3255bfef95601890afd80709';
-   $select_old_pass = $conn->prepare("SELECT password FROM `admin` WHERE id = ?");
-   $select_old_pass->execute([$admin_id]);
-   $fetch_prev_pass = $select_old_pass->fetch(PDO::FETCH_ASSOC);
-   $prev_pass = $fetch_prev_pass['password'];
-   $old_pass = sha1($_POST['old_pass']);
-   $old_pass = filter_var($old_pass, FILTER_SANITIZE_STRING);
-   $new_pass = sha1($_POST['new_pass']);
-   $new_pass = filter_var($new_pass, FILTER_SANITIZE_STRING);
-   $confirm_pass = sha1($_POST['confirm_pass']);
-   $confirm_pass = filter_var($confirm_pass, FILTER_SANITIZE_STRING);
+         if (!empty($name)) {
+            $select_name = $conn->prepare("SELECT * FROM `$account_type` WHERE name = ? AND id != ?");
+            $select_name->execute([$name, $account_id]);
+            if ($select_name->rowCount() > 0) {
+               $message[] = 'Username already taken!';
+            } else {
+               $update_name = $conn->prepare("UPDATE `$account_type` SET name = ? WHERE id = ?");
+               $update_name->execute([$name, $account_id]);
+            }
+         }
 
-   if($old_pass != $empty_pass){
-      if($old_pass != $prev_pass){
-         $message[] = 'old password not matched!';
-      }elseif($new_pass != $confirm_pass){
-         $message[] = 'confirm password not matched!';
-      }else{
-         if($new_pass != $empty_pass){
-            $update_pass = $conn->prepare("UPDATE `admin` SET password = ? WHERE id = ?");
-            $update_pass->execute([$confirm_pass, $admin_id]);
-            $message[] = 'password updated successfully!';
-         }else{
-            $message[] = 'please enter a new password!';
+         $empty_pass = 'da39a3ee5e6b4b0d3255bfef95601890afd80709';
+         $select_old_pass = $conn->prepare("SELECT password FROM `$account_type` WHERE id = ?");
+         $select_old_pass->execute([$account_id]);
+         $fetch_prev_pass = $select_old_pass->fetch(PDO::FETCH_ASSOC);
+         $prev_pass = $fetch_prev_pass['password'];
+         $old_pass = sha1($_POST['old_pass']);
+         $old_pass = filter_var($old_pass, FILTER_SANITIZE_STRING);
+         $new_pass = sha1($_POST['new_pass']);
+         $new_pass = filter_var($new_pass, FILTER_SANITIZE_STRING);
+         $confirm_pass = sha1($_POST['confirm_pass']);
+         $confirm_pass = filter_var($confirm_pass, FILTER_SANITIZE_STRING);
+
+         if ($old_pass != $empty_pass) {
+            if ($old_pass != $prev_pass) {
+               $message[] = 'Old password not matched!';
+            } elseif ($new_pass != $confirm_pass) {
+               $message[] = 'Confirm password not matched!';
+            } else {
+               if ($new_pass != $empty_pass) {
+                  $update_pass = $conn->prepare("UPDATE `$account_type` SET password = ? WHERE id = ?");
+                  $update_pass->execute([$confirm_pass, $account_id]);
+                  $message[] = 'Password updated successfully!';
+               } else {
+                  $message[] = 'Please enter a new password!';
+               }
+            }
          }
       }
+
+      // Fetch user details to display in the form
+      $select_profile = $conn->prepare("SELECT * FROM `$account_type` WHERE id = ?");
+      $select_profile->execute([$account_id]);
+      $fetch_profile = $select_profile->fetch(PDO::FETCH_ASSOC);
    }
-
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -82,8 +94,7 @@ if(isset($_POST['submit'])){
 <section class="form-container">
 
    <form action="" method="POST">
-      <h3>update profile</h3>
-      <input type="text" name="name" maxlength="20" class="box" oninput="this.value = this.value.replace(/\s/g, '')" placeholder="<?= $fetch_profile['name']; ?>">
+      <h3>Update Password</h3>
       <input type="password" name="old_pass" maxlength="20" placeholder="enter your old password" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
       <input type="password" name="new_pass" maxlength="20" placeholder="enter your new password" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
       <input type="password" name="confirm_pass" maxlength="20" placeholder="confirm your new password" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
