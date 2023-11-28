@@ -96,77 +96,11 @@ if (isset($cashier_id)) {
                         <a href="placed_orders.php?delete=<?= $fetch_orders['id']; ?>" class="delete-btn"
                             onclick="return confirm('delete this order?');">delete</a>
                         <a href="#" class="delete-btn"
-                            onclick="printOrder(<?= $fetch_orders['id']; ?>, '<?= $fetch_orders['placed_on']; ?>', '<?= $fetch_orders['address']; ?>', '<?= $fetch_orders['total_products']; ?>', '<?= $fetch_orders['total_price']; ?>', '<?= $fetch_orders['method']; ?>');">Print</a>
+                            onclick="printOrder(<?= $fetch_orders['id']; ?>, '<?= $fetch_orders['placed_on']; ?>', '<?= $fetch_orders['address']; ?>', '<?= $fetch_orders['total_products']; ?>', '<?= $fetch_orders['total_price']; ?>', '<?= $fetch_orders['method']; ?>', '<?= isset($cashier_name) ? $cashier_name : ''; ?>');">Print</a>
+
                     </div>
                 </form>
             </div>
-
-            <script>
-            function printOrder(orderId, placedOn, tableNumber, totalProducts, totalPrice, paymentMethod) {
-                var printWindow = window.open('', '_blank');
-
-                printWindow.document.write('<html><head><title>Kusina ni Pedro Receipt </title>');
-                printWindow.document.write('<style>');
-                printWindow.document.write('body { font-family: Arial, sans-serif; text-align: center; }');
-                printWindow.document.write('h1, h4, p { margin: 0; }');
-                printWindow.document.write('img { width: 205px; height: auto; margin: 25px; }');
-                printWindow.document.write('</style>');
-                printWindow.document.write('</head><body>');
-
-                printWindow.document.write('<img src="../images/kusina_ni_pedro_logo.jpg" alt="Kusina ni Pedro Logo">');
-                printWindow.document.write('<h1>Kusina ni Pedro</h1>');
-                printWindow.document.write('<h4>Capitol Hills</h4>');
-                printWindow.document.write('<h4>Brgy. Payompon, Mamburao</h4>');
-                printWindow.document.write('<h4>Occidental Mindoro</h4>');
-                printWindow.document.write('</br>');
-
-                printWindow.document.write(
-                    '<p>Employee: <?php echo isset($cashier_name) ? $cashier_name : ''; ?> </p>');
-
-                printWindow.document.write('<p>--------------------------------------------</p>');
-
-                var dineOrTakeOut = (tableNumber >= 1 && tableNumber <= 10) ? "Dine In" : "Take Out";
-                printWindow.document.write('<h4>' + dineOrTakeOut + '</h4>');
-                printWindow.document.write('<p>--------------------------------------------</p>');
-
-                var productsArray = totalProducts.split(' - ');
-                printWindow.document.write('<h3>Ordered Products:</h3>');
-                for (var i = 0; i < productsArray.length; i++) {
-                    var product = productsArray[i].trim();
-                    printWindow.document.write('<p>' + formatProductEntry(product) + '</p>');
-                }
-
-                printWindow.document.write('<h1>TOTAL: ' + total + '</h1>');
-
-                printWindow.document.write('<p>Place on: ' + placedOn + '</p>');
-                printWindow.document.write('<p>Table Number: ' + tableNumber + '</p>');
-                printWindow.document.write('<p>Total Products: ' + totalProducts + '</p>');
-                printWindow.document.write('<p>Total Price: ₱' + totalPrice + '</p>');
-                printWindow.document.write('<p>Payment Method: ' + paymentMethod + '</p>');
-                printWindow.document.write('<h5> Thank you, Come Again! <3 </h5>');
-
-                printWindow.document.write('</body></html>');
-
-                printWindow.onload = function() {
-                    printWindow.print();
-                    printWindow.close();
-                };
-
-                return false;
-            }
-
-            function formatProductEntry(product) {
-                var parts = product.split(' (');
-                var productName = parts[0];
-                var quantityAndPrice = parts[1].replace(')', '');
-
-                return padRight(productName, 50) + quantityAndPrice;
-            }
-
-            function padRight(str, length) {
-                return (str + ' '.repeat(Math.max(0, length - str.length)));
-            }
-            </script>
 
             <?php
             }
@@ -183,6 +117,48 @@ if (isset($cashier_id)) {
 
     <!-- custom js file link  -->
     <script src="../js/admin_script.js"></script>
+    <script>
+    function printOrder(orderId, placedOn, tableNumber, totalProducts, totalPrice, paymentMethod) {
+        var printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Kusina ni Pedro Receipt </title>');
+        printWindow.document.write('<style>');
+        printWindow.document.write('body { font-family: Arial, sans-serif; text-align: center; }');
+        printWindow.document.write('h4{ margin: 0; }');
+        printWindow.document.write('img { width: 205px; height: auto; margin: 25px; }');
+        printWindow.document.write('</style>');
+        printWindow.document.write('</head><body>');
+
+        // Add the order details to the print window
+        printWindow.document.write('<img src="../images/kusina_ni_pedro_logo.jpg" alt="Kusina ni Pedro Logo">');
+        printWindow.document.write('<h1>Kusina ni Pedro</h1>');
+        printWindow.document.write('<h4>Capitol Hills</h4>');
+        printWindow.document.write('<h4>Brgy. Payompon, Mamburao</h4>');
+        printWindow.document.write('<h4>Occidental Mindoro</h4>');
+
+        printWindow.document.write(
+            '<p>Employee: <?php echo isset($cashier_name) ? $cashier_name : ''; ?> </p>');
+
+        printWindow.document.write('<p>--------------------------------------------</p>');
+
+        var dineOrTakeOut = (tableNumber >= 1 && tableNumber <= 10) ? "Dine In" : "Take Out";
+        printWindow.document.write('<h4>' + dineOrTakeOut + '</h4>');
+        printWindow.document.write('<p>--------------------------------------------</p>');
+
+        printWindow.document.write('<p>' + totalProducts + '</p>');
+
+        printWindow.document.write('<h1>Total: ₱' + totalPrice + '</h1>');
+        printWindow.document.write('<p>Payment Method: ' + paymentMethod + '</p>');
+
+        printWindow.document.write('<p>Place on: ' + placedOn + '</p>');
+
+        printWindow.document.write('<h5> Thank you, Come Again! <3 </h5>');
+
+        printWindow.document.write('</body></html>');
+        printWindow.print();
+        printWindow.close();
+        return false; // Prevent the default behavior of the "a" tag
+    }
+    </script>
 </body>
 
 </html>
