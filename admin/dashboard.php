@@ -117,38 +117,38 @@ $today_completed_total_sale = $fetch_today_completed_orders['today_completed_tot
 
             <div class="box">
                 <?php
-            $select_users = $conn->prepare("SELECT * FROM `users`");
+            $select_users = $conn->prepare("SELECT * FROM `admin`");
             $select_users->execute();
             $numbers_of_users = $select_users->rowCount();
             ?>
                 <h3><?= $numbers_of_users; ?></h3>
-                <p>users accounts</p>
-                <a href="users_accounts.php" class="btn">see users</a>
+                <p>Kitchen Accounts</p>
+                <a href="admin_accounts.php" class="btn">see more</a>
             </div>
 
             <div class="box">
                 <?php
-            $select_admins = $conn->prepare("SELECT * FROM `admin`");
+            $select_admins = $conn->prepare("SELECT * FROM `cashier`");
             $select_admins->execute();
             $numbers_of_admins = $select_admins->rowCount();
             ?>
                 <h3><?= $numbers_of_admins; ?></h3>
-                <p>admins</p>
-                <a href="admin_accounts.php" class="btn">see admins</a>
+                <p>Cashier Accounts</p>
+                <a href="admin_accounts.php" class="btn">see more</a>
             </div>
 
             <div class="box">
                 <?php
-            $select_messages = $conn->prepare("SELECT * FROM `ratings`");
+            $select_messages = $conn->prepare("SELECT * FROM `admin`");
             $select_messages->execute();
             $numbers_of_messages = $select_messages->rowCount();
             ?>
                 <h3><?= $numbers_of_messages; ?></h3>
-                <p>Ratings</p>
-                <a href="ratings.php" class="btn">See Ratings</a>
+                <p>Admin Accounts</p>
+                <a href="admin_accounts.php" class="btn">See more</a>
             </div>
         </div>
-        <div class="total-box">
+        <div class="total-box" style="display: none;">
             <h3><span>₱</span><?= $today_completed_total_sale ?? '0'; ?><span>/-</span></h3>
             <p>Today's Total Sale - <?= date('F j, Y'); ?></p>
         </div>

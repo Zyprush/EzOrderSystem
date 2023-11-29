@@ -89,7 +89,6 @@ if (isset($_POST['submit'])) {
 
    <select name="account_type" id="account_type" class="box">
       <option value="">--Select Account--</option>
-      <option value="user">User</option>
       <option value="cashier">Cashier</option>
       <option value="kitchen">Kitchen</option>
       <option value="admin">Admin</option>

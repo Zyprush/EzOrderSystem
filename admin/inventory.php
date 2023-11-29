@@ -228,28 +228,6 @@ if ($get_top_products->rowCount() > 0) {
     <section class="dashboard">
         <h1 class="heading">Inventory</h1>
 
-        <div class="top-products-container">
-            <h2 class="title-top-products">Top 3 Products SOLD</h2>
-            <div class="product-cards">
-                <?php foreach ($top_products as $product) : ?>
-                <div class="product-card">
-                    <?php if (!empty($product['image'])) : ?>
-                    <div class="product-image">
-                        <img src="../uploaded_img/<?= $product['image'] ?>" alt="<?= $product['name'] ?>">
-                    </div>
-                    <?php endif; ?>
-                    <div class="product-details">
-                        <p class="product-name"><?= $product['name'] ?></p>
-                        <p class="product-sold">Sold: <?= $product['quantity_sold'] ?></p>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-
-
-
-
         <div class="stock-levels-container">
             <h2>Current Stock Levels</h2>
 

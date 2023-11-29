@@ -68,7 +68,7 @@ if (isset($_POST['submit'])) {
 
          $conn->commit();
          $message[] = 'Order placed successfully!';
-         header('Location: thanks.php');
+         header('Location: kiosk.php');
       } catch (PDOException $e) {
          $conn->rollBack();
          $message[] = 'An error occurred. Please try again later.';
