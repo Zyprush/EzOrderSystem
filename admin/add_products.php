@@ -133,6 +133,9 @@ $ingredientsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
     .ingredient-checkboxes input {
         border: solid 1px;
     }
+    .ingredient-checkboxes .quanti {
+        padding: 10px;
+    }
     </style>
 </head>
 
@@ -159,9 +162,9 @@ $ingredientsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <label for="ingredients">ingredients</label>
                 <?php foreach ($ingredientsData as $ingredient) : ?>
                 <label>
-                    <input type="checkbox" name="ingredients[]" value="<?php echo $ingredient['id']; ?>">
+                    <input type="checkbox" name="ingredients[]" value="<?php echo $ingredient['id']; ?>" class="check">
                     <?php echo $ingredient['name']; ?>
-                    <input type="number" name="ingredient_quantity[]" placeholder="Quantity" step="0.1" min="0" >
+                    <input type="number" name="ingredient_quantity[]" placeholder="Quantity" step="0.1" min="0" class="quanti">
                     <?php echo $ingredient['unit']; ?>
                 </label>
                 <br>
