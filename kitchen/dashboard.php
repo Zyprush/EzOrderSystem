@@ -11,103 +11,107 @@ if (!isset($admin_id) && !isset($kitchen_id)) {
    header('location: admin_login.php');
 }
 
+if (isset($_POST['update_payment'])) {
+
+   $order_id = $_POST['order_id'];
+   $payment_status = $_POST['payment_status'];
+   $update_status = $conn->prepare("UPDATE `orders` SET payment_status = ? WHERE id = ?");
+   $update_status->execute([$payment_status, $order_id]);
+   $message[] = 'payment status updated!';
+}
+
+if (isset($_GET['delete'])) {
+   $delete_id = $_GET['delete'];
+   $delete_order = $conn->prepare("DELETE FROM `orders` WHERE id = ?");
+   $delete_order->execute([$delete_id]);
+   header('location:placed_orders.php');
+}
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-   <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>dashboard</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>placed orders</title>
 
-   <!-- font awesome cdn link  -->
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
-   <!-- custom css file link  -->
-   <link rel="stylesheet" href="../css/admin_style.css">
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="../css/admin_style.css">
 
 </head>
 
 <body>
 
-   <?php include '../components/kitchen_header.php' ?>
+    <?php include '../components/kitchen_header.php' ?>
 
-   <!-- admin dashboard section starts  -->
+    <!-- placed orders section starts  -->
 
-   <section class="dashboard">
+    <section class="placed-orders">
 
-      <h1 class="heading">dashboard</h1>
+        <h1 class="heading">placed orders</h1>
 
-      <div class="box-container">
+        <div class="box-container">
 
-         <div class="box">
             <?php
-            $total_pendings = 0;
-            $select_pendings = $conn->prepare("SELECT * FROM `orders` WHERE payment_status = ?");
-            $select_pendings->execute(['pending']);
-            while ($fetch_pendings = $select_pendings->fetch(PDO::FETCH_ASSOC)) {
-               $total_pendings += $fetch_pendings['total_price'];
+         $select_orders = $conn->prepare("SELECT * FROM `orders` WHERE payment_status = 'pending'");
+         $select_orders->execute();
+         if ($select_orders->rowCount() > 0) {
+            while ($fetch_orders = $select_orders->fetch(PDO::FETCH_ASSOC)) {
+         ?>
+            <div class="box">
+                <p> placed on : <span><?= $fetch_orders['placed_on']; ?></span> </p>
+                <p> Table Number : <span><?= $fetch_orders['address']; ?></span> </p>
+                <p> total products : <span><?= $fetch_orders['total_products']; ?></span> </p>
+                <p> total price : <span>₱<?= $fetch_orders['total_price']; ?></span> </p>
+                <p> payment method : <span><?= $fetch_orders['method']; ?></span> </p>
+                <form action="" method="POST" onsubmit="return validateForm(this);">
+                    <input type="hidden" name="order_id" value="<?= $fetch_orders['id']; ?>">
+                    <select name="payment_status" class="drop-down" id="paymentStatus">
+                        <option value="" selected disabled><?= $fetch_orders['payment_status']; ?></option>
+                        <option value="pending">pending</option>
+                        <option value="completed">completed</option>
+                    </select>
+                    <div class="flex-btn">
+                        <input type="submit" value="update" class="btn" name="update_payment">
+                        <a href="placed_orders.php?delete=<?= $fetch_orders['id']; ?>" class="delete-btn"
+                            onclick="return confirm('delete this order?');">delete</a>
+                    </div>
+                </form>
+            </div>
+            <?php
             }
-            ?>
-            <h3><span>₱</span><?= $total_pendings; ?><span>/-</span></h3>
-            <p>total pendings</p>
-            <a href="placed_orders.php" class="btn">see orders</a>
-         </div>
+         } else {
+            echo '<p class="empty">no orders placed yet!</p>';
+         }
+         ?>
 
-         <div class="box">
-            <?php
-            $total_completes = 0;
-            $select_completes = $conn->prepare("SELECT * FROM `orders` WHERE payment_status = ?");
-            $select_completes->execute(['completed']);
-            while ($fetch_completes = $select_completes->fetch(PDO::FETCH_ASSOC)) {
-               $total_completes += $fetch_completes['total_price'];
-            }
-            ?>
-            <h3><span>₱</span><?= $total_completes; ?><span>/-</span></h3>
-            <p>total completes</p>
-            <a href="placed_orders.php" class="btn">see orders</a>
-         </div>
+        </div>
 
-         <div class="box">
-            <?php
-            $select_orders = $conn->prepare("SELECT * FROM `orders`");
-            $select_orders->execute();
-            $numbers_of_orders = $select_orders->rowCount();
-            ?>
-            <h3><?= $numbers_of_orders; ?></h3>
-            <p>total orders</p>
-            <a href="placed_orders.php" class="btn">see orders</a>
-         </div>
+    </section>
 
-         <div class="box">
-            <?php
-            $select_products = $conn->prepare("SELECT * FROM `products`");
-            $select_products->execute();
-            $numbers_of_products = $select_products->rowCount();
-            ?>
-            <h3><?= $numbers_of_products; ?></h3>
-            <p>products added</p>
-            <a href="products.php" class="btn">see products</a>
-         </div>
+    <!-- placed orders section ends -->
 
-      </div>
+    <!-- custom js file link  -->
+    <script src="../js/admin_script.js"></script>
 
-   </section>
+    <script>
+    function validateForm(form) {
+        var selectedValue = document.getElementById('paymentStatus').value;
 
-   <!-- admin dashboard section ends -->
+        if (selectedValue === null || selectedValue === '') {
+            alert('Please select a payment status.');
+            return false; // Prevent form submission if no value is selected
+        }
 
-
-
-
-
-
-
-
-
-   <!-- custom js file link  -->
-   <script src="../js/admin_script.js"></script>
+        return true; // Allow form submission if a value is selected
+    }
+    </script>
 
 </body>
 

@@ -17,11 +17,6 @@ if (isset($message)) {
 
         <a href="dashboard.php" class="logo">Cashier<span>Panel</span></a>
 
-        <nav class="navbar">
-            <a href="dashboard.php">Home</a>
-            <a href="placed_orders.php">Orders</a>
-        </nav>
-
         <div class="icons">
             <div id="menu-btn" class="fas fa-bars"></div>
             <div id="user-btn" class="fas fa-user"></div>

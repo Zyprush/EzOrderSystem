@@ -70,6 +70,7 @@ if (isset($_GET['show_all'])) {
         border: var(--border);
         border-radius: 5px;
         padding: 25px;
+        margin-bottom: 20px;
     }
 
     /* Target the table body and set font size */
@@ -94,7 +95,7 @@ if (isset($_GET['show_all'])) {
     <!-- placed orders section starts  -->
 
     <section class="placed-orders">
-        <h1 class="heading">Placed Orders</h1>
+        <h1 class="heading">Today's Placed Orders</h1>
 
         <div class="box-container">
 

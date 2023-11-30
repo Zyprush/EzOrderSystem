@@ -74,7 +74,7 @@ if (isset($_GET['update']) && isset($_GET['type'])) {
             </div>
 
             <?php
-            $account_types = ['admin', 'user', 'cashier', 'kitchen'];
+            $account_types = ['admin', 'cashier', 'kitchen'];
 
             foreach ($account_types as $account_type) {
                 $select_account = $conn->prepare("SELECT * FROM `$account_type`");

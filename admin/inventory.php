@@ -24,36 +24,6 @@ if (isset($_GET['delete'])) {
     header('location:products.php');
  }
 
-// Fetch the top 3 products based on sales quantity with 'completed' payment status
-$get_top_products = $conn->query("SELECT total_products, SUM(quantity_sold) AS total_quantity_sold 
-    FROM orders 
-    WHERE payment_status = 'completed'
-    GROUP BY total_products 
-    ORDER BY total_quantity_sold DESC 
-    LIMIT 3");
-
-$top_products = [];
-if ($get_top_products->rowCount() > 0) {
-    while ($row = $get_top_products->fetch(PDO::FETCH_ASSOC)) {
-        // Extracting product name from total_products field
-        $productDetails = explode('(', $row['total_products']);
-        $productName = trim($productDetails[0]); // Extracting the product name
-
-        // Fetch the image for the product from the 'products' table
-        $get_product_image = $conn->prepare("SELECT image FROM products WHERE name = ?");
-        $get_product_image->execute([$productName]);
-        $imageRow = $get_product_image->fetch(PDO::FETCH_ASSOC);
-        $productImage = $imageRow ? $imageRow['image'] : ''; // Get the image path
-
-        $top_products[] = [
-            'name' => $productName,
-            'quantity_sold' => $row['total_quantity_sold'],
-            'image' => $productImage // Store the image path
-        ];
-    }
-}
-
-
 ?>
 
 <!DOCTYPE html>
@@ -116,105 +86,6 @@ if ($get_top_products->rowCount() > 0) {
         background-color: #ddd;
         color: #000;
     }
-
-    /* Styles for the top products container */
-    .top-products-container {
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-
-    /* Flexbox styles for product cards */
-    .product-cards {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 20px;
-        /* Adjust the gap between cards */
-    }
-
-    .product-card {
-        flex: 0 0 calc(33.33% - 20px);
-        /* Set width for each card */
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Media query for responsive layout */
-    @media (max-width: 768px) {
-        .product-card {
-            flex: 0 0 calc(50% - 20px);
-            /* Adjust width for smaller screens */
-        }
-    }
-
-    .title-top-products {
-        font-size: 2.5rem;
-        margin-bottom: 15px;
-    }
-
-    /* Product card container */
-    .product-card {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease-in-out;
-    }
-
-    .product-card:hover {
-        transform: translateY(-5px);
-        /* Optional: Apply a subtle hover effect */
-    }
-
-    /* Product image */
-    .product-image {
-        width: 100%;
-        max-height: 300px;
-        /* Set max height for images */
-        overflow: hidden;
-        /* Hide overflow if images exceed max height */
-        border-radius: 8px;
-        margin-bottom: 10px;
-        /* Optional: Add margin bottom */
-    }
-
-    .product-image img {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-        /* Maintain aspect ratio and cover the container */
-        transition: transform 0.3s ease-in-out;
-    }
-
-    .product-image:hover img {
-        transform: scale(1.1);
-        /* Optional: Apply a zoom effect on image hover */
-    }
-
-    /* Product details */
-    .product-details {
-        text-align: center;
-    }
-
-    .product-name {
-        margin-bottom: 5px;
-        font-size: 1.2rem;
-        font-weight: bold;
-        /* Optional: Make the product name bold */
-    }
-
-    .product-sold {
-        font-size: 1rem;
-        color: #666;
-        /* Optional: Adjust the color */
-    }
     </style>
 
 </head>
@@ -241,9 +112,9 @@ if ($get_top_products->rowCount() > 0) {
                 </thead>
                 <tbody>
                     <?php
-        $stock_query = $conn->query("SELECT id, name, quantity_available FROM products");
-        while ($row = $stock_query->fetch(PDO::FETCH_ASSOC)) {
-            echo "<tr>
+                    $stock_query = $conn->query("SELECT id, name, quantity_available FROM products");
+                    while ($row = $stock_query->fetch(PDO::FETCH_ASSOC)) {
+                    echo "<tr>
                     <td>{$row['name']}</td>
                     <td>{$row['quantity_available']}</td>
                     <td>
@@ -251,7 +122,7 @@ if ($get_top_products->rowCount() > 0) {
                         <a href='inventory.php?delete={$row['id']}' class='button-link delete-link' onclick='return confirm(\"Are you sure you want to delete this product?\")'>Delete</a>
                     </td>
 
-                </tr>";
+                    </tr>";
         }
         ?>
                 </tbody>
