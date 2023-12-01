@@ -55,13 +55,17 @@ if (isset($_POST['submit'])) {
                 $productIngredientsQuery = $conn->prepare("SELECT * FROM `product_ingredients` WHERE product_id = ?");
                 $productIngredientsQuery->execute([$item['pid']]);
                 $productIngredients = $productIngredientsQuery->fetchAll(PDO::FETCH_ASSOC);
-
+            
                 foreach ($productIngredients as $ingredient) {
-                    // Deduct the ingredient quantity from the 'ingredients' table
+                    // Multiply the ingredient quantity by the item's total quantity in the cart
+                    $totalIngredientQuantityToDeduct = $ingredient['quantity'] * $item['quantity'];
+            
+                    // Deduct the multiplied ingredient quantity from the 'ingredients' table
                     $updateIngredientQuantity = $conn->prepare("UPDATE `ingredients` SET quantity = quantity - ? WHERE id = ?");
-                    $updateIngredientQuantity->execute([$ingredient['quantity'], $ingredient['ingredient_id']]);
+                    $updateIngredientQuantity->execute([$totalIngredientQuantityToDeduct, $ingredient['ingredient_id']]);
                 }
             }
+            
 
             // Sum up the total quantity sold
             $total_quantity_sold = array_sum(array_column($cart_items, 'quantity'));

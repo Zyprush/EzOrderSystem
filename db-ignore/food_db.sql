@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 30, 2023 at 07:12 AM
+-- Generation Time: Dec 01, 2023 at 05:46 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -88,16 +88,6 @@ CREATE TABLE `ingredients` (
   `unit` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `ingredients`
---
-
-INSERT INTO `ingredients` (`id`, `name`, `quantity`, `unit`) VALUES
-(2, 'Ground Beef', 18.50, 'kg'),
-(3, 'Bread', 17.00, 'pieces'),
-(4, 'Cabage', 48.50, 'kg'),
-(5, 'White onion', 50.00, 'pieces');
-
 -- --------------------------------------------------------
 
 --
@@ -158,15 +148,6 @@ CREATE TABLE `orders` (
   `placed_on` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`id`, `user_id`, `method`, `address`, `address1`, `total_products`, `total_price`, `quantity_sold`, `payment_status`, `placed_on`) VALUES
-(1, 1, 'Cash', '2', 'Dine In', 'Ham Burger (150 x 1) - ', 150.00, 1, 'completed', '2023-11-30 05:08:17'),
-(2, 1, 'Cash', '7', 'Dine In', 'Ham Burger (150 x 1) - ', 150.00, 1, 'completed', '2023-11-30 05:10:12'),
-(3, 1, 'Cash', '2', 'Take Out', 'Ham Burger (150 x 1) - ', 150.00, 1, 'pending', '2023-11-30 05:25:49');
-
 -- --------------------------------------------------------
 
 --
@@ -181,13 +162,6 @@ CREATE TABLE `products` (
   `image` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `products`
---
-
-INSERT INTO `products` (`id`, `name`, `category`, `price`, `image`) VALUES
-(1, 'Ham Burger', 'fast food', 150.00, 'th.jpg');
-
 -- --------------------------------------------------------
 
 --
@@ -200,78 +174,6 @@ CREATE TABLE `product_ingredients` (
   `ingredient_id` int(11) DEFAULT NULL,
   `quantity` decimal(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `product_ingredients`
---
-
-INSERT INTO `product_ingredients` (`id`, `product_id`, `ingredient_id`, `quantity`) VALUES
-(1, 1, 2, 0.50),
-(2, 1, 3, 1.00),
-(3, 1, 4, 0.50);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `ratings`
---
-
-CREATE TABLE `ratings` (
-  `ID` int(255) NOT NULL,
-  `rate` int(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `ratings`
---
-
-INSERT INTO `ratings` (`ID`, `rate`) VALUES
-(6, 3),
-(7, 3),
-(8, 3),
-(9, 3);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user`
---
-
-CREATE TABLE `user` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `user`
---
-
-INSERT INTO `user` (`id`, `name`, `password`) VALUES
-(2, 'buyer', 'f865b53623b121fd34ee5426c792e5c33af8c227'),
-(3, 'jake', 'f865b53623b121fd34ee5426c792e5c33af8c227');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `users`
---
-
-CREATE TABLE `users` (
-  `id` int(100) NOT NULL,
-  `name` varchar(20) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `number` varchar(10) NOT NULL,
-  `password` varchar(50) NOT NULL,
-  `address` varchar(500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `name`, `email`, `number`, `password`, `address`) VALUES
-(2, 'Buyer', 'buyer@gmail.com', '1234567891', 'f865b53623b121fd34ee5426c792e5c33af8c227', '123');
 
 --
 -- Indexes for dumped tables
@@ -334,24 +236,6 @@ ALTER TABLE `product_ingredients`
   ADD KEY `ingredient_id` (`ingredient_id`);
 
 --
--- Indexes for table `ratings`
---
-ALTER TABLE `ratings`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -377,7 +261,7 @@ ALTER TABLE `cashier`
 -- AUTO_INCREMENT for table `ingredients`
 --
 ALTER TABLE `ingredients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `kitchen`
@@ -395,37 +279,19 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `product_ingredients`
 --
 ALTER TABLE `product_ingredients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `ratings`
---
-ALTER TABLE `ratings`
-  MODIFY `ID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT for table `user`
---
-ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables

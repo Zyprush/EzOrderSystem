@@ -20,11 +20,9 @@ if (isset($_POST['update'])) {
    $price = filter_var($price, FILTER_SANITIZE_STRING);
    $category = $_POST['category'];
    $category = filter_var($category, FILTER_SANITIZE_STRING);
-   $quantity = $_POST['quantity'];
-   $quantity = filter_var($quantity, FILTER_SANITIZE_STRING);
 
-   $update_product = $conn->prepare("UPDATE `products` SET name = ?, category = ?, price = ?, quantity_available = ? WHERE id = ?");
-   $update_product->execute([$name, $category, $price, $quantity, $pid]);
+   $update_product = $conn->prepare("UPDATE `products` SET name = ?, category = ?, price = ? WHERE id = ?");
+   $update_product->execute([$name, $category, $price, $pid]);
 
    $message[] = 'product updated!';
 
@@ -103,10 +101,6 @@ if (isset($_POST['update'])) {
                 <option value="drinks">drinks</option>
                 <option value="desserts">desserts</option>
             </select>
-            <!-- Add a new input field for quantity available -->
-            <span>update quantity available</span>
-            <input type="number" min="0" max="999999" required placeholder="enter quantity available" name="quantity"
-                class="box" value="<?= $fetch_products['quantity_available']; ?>">
             <span>update image</span>
             <input type="file" name="image" class="box" accept="image/jpg, image/jpeg, image/png, image/webp">
             <div class="flex-btn">
