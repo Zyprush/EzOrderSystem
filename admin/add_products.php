@@ -164,7 +164,7 @@ $ingredientsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <label>
                     <input type="checkbox" name="ingredients[]" value="<?php echo $ingredient['id']; ?>" class="check">
                     <?php echo $ingredient['name']; ?>
-                    <input type="number" name="ingredient_quantity[]" placeholder="Quantity" step="0.1" min="0" class="quanti">
+                    <input type="number" name="ingredient_quantity[]" placeholder="Quantity" min="0" step="0.1"class="quanti">
                     <?php echo $ingredient['unit']; ?>
                 </label>
                 <br>
