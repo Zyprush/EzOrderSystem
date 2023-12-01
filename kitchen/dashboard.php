@@ -24,7 +24,7 @@ if (isset($_GET['delete'])) {
    $delete_id = $_GET['delete'];
    $delete_order = $conn->prepare("DELETE FROM `orders` WHERE id = ?");
    $delete_order->execute([$delete_id]);
-   header('location:placed_orders.php');
+   header('location:dashboard.php');
 }
 
 ?>
@@ -79,7 +79,7 @@ if (isset($_GET['delete'])) {
                     </select>
                     <div class="flex-btn">
                         <input type="submit" value="update" class="btn" name="update_payment">
-                        <a href="placed_orders.php?delete=<?= $fetch_orders['id']; ?>" class="delete-btn"
+                        <a href="dashboard.php?delete=<?= $fetch_orders['id']; ?>" class="delete-btn"
                             onclick="return confirm('delete this order?');">delete</a>
                     </div>
                 </form>

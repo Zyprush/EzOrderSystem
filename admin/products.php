@@ -11,17 +11,32 @@
     };
 
     if (isset($_GET['delete'])) {
-
-    $delete_id = $_GET['delete'];
-    $delete_product_image = $conn->prepare("SELECT * FROM `products` WHERE id = ?");
-    $delete_product_image->execute([$delete_id]);
-    $fetch_delete_image = $delete_product_image->fetch(PDO::FETCH_ASSOC);
-    unlink('../uploaded_img/' . $fetch_delete_image['image']);
-    $delete_product = $conn->prepare("DELETE FROM `products` WHERE id = ?");
-    $delete_product->execute([$delete_id]);
-    $delete_cart = $conn->prepare("DELETE FROM `cart` WHERE pid = ?");
-    $delete_cart->execute([$delete_id]);
-    header('location:products.php');
+        $delete_id = $_GET['delete'];
+    
+        // Delete associated product ingredients first
+        $delete_product_ingredients = $conn->prepare("DELETE FROM `product_ingredients` WHERE product_id = ?");
+        $delete_product_ingredients->execute([$delete_id]);
+    
+        // Fetch the product image before deleting the product
+        $fetch_delete_image = $conn->prepare("SELECT * FROM `products` WHERE id = ?");
+        $fetch_delete_image->execute([$delete_id]);
+        $image_data = $fetch_delete_image->fetch(PDO::FETCH_ASSOC);
+    
+        if ($image_data && isset($image_data['image'])) {
+            // Delete the image associated with the product
+            unlink('../uploaded_img/' . $image_data['image']);
+        }
+    
+        // Now delete the product
+        $delete_product = $conn->prepare("DELETE FROM `products` WHERE id = ?");
+        $delete_product->execute([$delete_id]);
+    
+        // Delete related cart entries (if necessary)
+        $delete_cart = $conn->prepare("DELETE FROM `cart` WHERE pid = ?");
+        $delete_cart->execute([$delete_id]);
+    
+        header('location:products.php');
+        exit(); // Ensure script stops here after redirect
     }
 
     ?>
@@ -49,10 +64,6 @@
             margin-bottom: 70px;
             padding: 20px;
         }
-        .btn {
-            width: 20%;
-            float: right;
-        }
         </style>
     </head>
 
@@ -62,7 +73,7 @@
 
         <!-- add products section starts  -->
         <div class="container">
-            <a href="add_products.php" class="btn">Add product</a>
+            <a href="add_products.php" class="btn" style="float: right; width: 20%;">Add product</a>
         </div>
 
         <!-- add products section ends -->

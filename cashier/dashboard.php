@@ -24,7 +24,7 @@ if (isset($_GET['delete'])) {
    $delete_id = $_GET['delete'];
    $delete_order = $conn->prepare("DELETE FROM `orders` WHERE id = ?");
    $delete_order->execute([$delete_id]);
-   header('location:placed_orders.php');
+   header('location:dashboard.php');
 }
 
 if (isset($cashier_id)) {
@@ -94,7 +94,7 @@ if (isset($cashier_id)) {
                     </select>
                     <div class="flex-btn1">
                         <input type="submit" value="update" class="btn" name="update_payment">
-                        <a href="placed_orders.php?delete=<?= $fetch_orders['id']; ?>" class="delete-btn"
+                        <a href="dashboard.php?delete=<?= $fetch_orders['id']; ?>" class="delete-btn"
                             onclick="return confirm('delete this order?');">delete</a>
                         <a href="#" class="delete-btn"
                             onclick="printOrder(<?= $fetch_orders['id']; ?>, '<?= $fetch_orders['placed_on']; ?>', '<?= $fetch_orders['address1']; ?>', '<?= $fetch_orders['address']; ?>', '<?= $fetch_orders['total_products']; ?>', '<?= $fetch_orders['total_price']; ?>', '<?= $fetch_orders['method']; ?>', '<?= isset($cashier_name) ? $cashier_name : ''; ?>');">Print</a>
