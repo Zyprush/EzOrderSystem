@@ -63,10 +63,13 @@ if (isset($_POST['add_product'])) {
 
             // Insert selected ingredients with quantities into product_ingredients table
             if (isset($_POST['ingredients']) && is_array($_POST['ingredients']) && isset($_POST['ingredient_quantity']) && is_array($_POST['ingredient_quantity'])) {
-                foreach ($_POST['ingredients'] as $key => $ingredientId) {
-                    $quantity = $_POST['ingredient_quantity'][$key];
-                    $insert_product_ingredient = $conn->prepare("INSERT INTO `product_ingredients`(product_id, ingredient_id, quantity) VALUES (?, ?, ?)");
-                    $insert_product_ingredient->execute([$lastProductId, $ingredientId, $quantity]);
+                foreach ($_POST['ingredients'] as $ingredientId => $value) {
+                    // Check if the checkbox is selected (value is '1')
+                    if ($value == 1) {
+                        $quantity = $_POST['ingredient_quantity'][$ingredientId];
+                        $insert_product_ingredient = $conn->prepare("INSERT INTO `product_ingredients`(product_id, ingredient_id, quantity) VALUES (?, ?, ?)");
+                        $insert_product_ingredient->execute([$lastProductId, $ingredientId, $quantity]);
+                    }
                 }
             }
 
@@ -103,41 +106,42 @@ $ingredientsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="shortcut icon" href="../images/logo.png" type="image/x-icon">
 
     <style>
-    .quantity {
-        font-size: 1.5rem;
-    }
+        .quantity {
+            font-size: 1.5rem;
+        }
 
-    .ingredient-checkboxes {
-        max-height: 200px;
-        /* Set your desired maximum height */
-        overflow-y: auto;
-        /* Enable vertical scrolling */
-        border: var(--border);
-        border-radius: 3%;
-        /* Optional: Add a border for visual clarity */
-        padding: 5px;
-        /* Optional: Add padding for better appearance */
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-    }
+        .ingredient-checkboxes {
+            max-height: 200px;
+            /* Set your desired maximum height */
+            overflow-y: auto;
+            /* Enable vertical scrolling */
+            border: var(--border);
+            border-radius: 3%;
+            /* Optional: Add a border for visual clarity */
+            padding: 5px;
+            /* Optional: Add padding for better appearance */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
 
-    .ingredient-checkboxes label {
-        display: block;
-        /* Optional: Add space between checkboxes */
-        border: solid 1px;
-        border-radius: 3%;
-        padding: 5px;
-        font-size: 2rem;
-        width: 100%;
-    }
+        .ingredient-checkboxes label {
+            display: block;
+            /* Optional: Add space between checkboxes */
+            border: solid 1px;
+            border-radius: 3%;
+            padding: 5px;
+            font-size: 2rem;
+            width: 100%;
+        }
 
-    .ingredient-checkboxes input {
-        border: solid 1px;
-    }
-    .ingredient-checkboxes .quanti {
-        padding: 10px;
-    }
+        .ingredient-checkboxes input {
+            border: solid 1px;
+        }
+
+        .ingredient-checkboxes .quanti {
+            padding: 10px;
+        }
     </style>
 </head>
 
@@ -149,8 +153,7 @@ $ingredientsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <form action="" method="POST" enctype="multipart/form-data">
             <h3>Add product</h3>
             <input type="text" required placeholder="Enter product name" name="name" maxlength="100" class="box">
-            <input type="number" min="0" max="9999999999" required placeholder="Enter product price" name="price"
-                onkeypress="if(this.value.length == 10) return false;" class="box">
+            <input type="number" min="0" max="9999999999" required placeholder="Enter product price" name="price" onkeypress="if(this.value.length == 10) return false;" class="box">
             <select name="category" class="box" required>
                 <option value="" disabled selected>Select category --</option>
                 <option value="main dish">Main dish</option>
@@ -163,13 +166,13 @@ $ingredientsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="ingredient-checkboxes">
                 <label for="ingredients">ingredients</label>
                 <?php foreach ($ingredientsData as $ingredient) : ?>
-                <label>
-                    <input type="checkbox" name="ingredients[]" value="<?php echo $ingredient['id']; ?>" class="check">
-                    <?php echo $ingredient['name']; ?>
-                    <input type="number" name="ingredient_quantity[]" placeholder="Quantity" min="0" step="0.1"class="quanti">
-                    <?php echo $ingredient['unit']; ?>
-                </label>
-                <br>
+                    <label>
+                        <input type="checkbox" name="ingredients[<?php echo $ingredient['id']; ?>]" value="1" class="check">
+                        <?php echo $ingredient['name']; ?>
+                        <input type="number" name="ingredient_quantity[<?php echo $ingredient['id']; ?>]" placeholder="Quantity" min="0" step="0.1" class="quanti">
+                        <?php echo $ingredient['unit']; ?>
+                    </label>
+                    <br>
                 <?php endforeach; ?>
             </div>
 
@@ -182,14 +185,14 @@ $ingredientsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="../js/admin_script.js"></script>
 
     <script>
-    $(document).ready(function() {
-        // Initialize Select2 for the ingredients selection
-        $('.ingredients-select').select2({
-            placeholder: 'Select ingredients',
-            allowClear: true,
-            multiple: true,
+        $(document).ready(function() {
+            // Initialize Select2 for the ingredients selection
+            $('.ingredients-select').select2({
+                placeholder: 'Select ingredients',
+                allowClear: true,
+                multiple: true,
+            });
         });
-    });
     </script>
 </body>
 
