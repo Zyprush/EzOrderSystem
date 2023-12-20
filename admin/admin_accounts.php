@@ -91,7 +91,7 @@ if (isset($_GET['update']) && isset($_GET['type'])) {
                             <div class="flex-btn">
                                 <a href="admin_accounts.php?delete=<?= $fetch_accounts['id']; ?>&type=<?= $account_type; ?>" class="delete-btn" onclick="return confirm('Delete this account?');">Delete</a>
 
-                                <a href="admin_accounts.php?update=<?= $fetch_accounts['name']; ?>&type=<?= $account_type; ?>" class="option-btn">Update</a>
+                                <a href="admin_accounts.php?update=<?= $fetch_accounts['id']; ?>&type=<?= $account_type; ?>" class="option-btn">Update</a>
                             </div>
                         </div>
             <?php
