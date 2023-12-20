@@ -100,6 +100,8 @@ $ingredientsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- custom css file link  -->
     <link rel="stylesheet" href="../css/admin_style.css">
+    <link rel="shortcut icon" href="../images/logo.png" type="image/x-icon">
+
     <style>
     .quantity {
         font-size: 1.5rem;

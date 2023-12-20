@@ -35,7 +35,7 @@ $yearlySales = [];
 while ($row = $select_monthly_sales->fetch(PDO::FETCH_ASSOC)) {
     // Get month name from its number
     $monthName = date('M', mktime(0, 0, 0, $row['month'], 1));
-    
+
     // Store month name and sales data in arrays
     $months[] = $monthName;
     $sales[] = $row['monthly_total'];
@@ -45,7 +45,7 @@ while ($row = $select_monthly_sales->fetch(PDO::FETCH_ASSOC)) {
 while ($row = $select_daily_sales->fetch(PDO::FETCH_ASSOC)) {
     // Get day name
     $dayName = $row['day_name'];
-    
+
     // Store day name and daily sales data in arrays
     $days[] = $dayName;
     $dailySales[] = $row['daily_total'];
@@ -55,7 +55,7 @@ while ($row = $select_daily_sales->fetch(PDO::FETCH_ASSOC)) {
 while ($row = $select_weekly_sales->fetch(PDO::FETCH_ASSOC)) {
     // Get week number
     $weekNumber = $row['week_number'];
-    
+
     // Store week number and weekly sales data in arrays
     $weeks[] = "Week " . ($weekNumber + 1);
     $weeklySales[] = $row['weekly_total'];
@@ -65,7 +65,7 @@ while ($row = $select_weekly_sales->fetch(PDO::FETCH_ASSOC)) {
 while ($row = $select_yearly_sales->fetch(PDO::FETCH_ASSOC)) {
     // Get year
     $year = $row['year'];
-    
+
     // Store year and yearly sales data in arrays
     $years[] = $year;
     $yearlySales[] = $row['yearly_total'];
@@ -144,22 +144,27 @@ $yearlySalesDataJSON = json_encode($yearlySalesData);
     <!-- Add Chart.js library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
+
     <title>Sales</title>
 
-    <style>
-    .sales-container {
-        margin: 20px;
-    }
+    <link rel="shortcut icon" href="../images/logo.png" type="image/x-icon">
 
-    .sales-charts {
-        border-radius: 5px;
-        border: solid 2px;
-        padding: 20px;
-        width: 96%;
-        /* Set a fixed width for chart containers */
-        height: auto;
-        /* Set a fixed height for chart containers */
-    }
+
+    <style>
+        .sales-container {
+            margin: 20px;
+        }
+
+        .sales-charts {
+            border-radius: 5px;
+            border: solid 2px;
+            padding: 20px;
+            width: 96%;
+            /* Set a fixed width for chart containers */
+            height: auto;
+            /* Set a fixed height for chart containers */
+        }
     </style>
 </head>
 
@@ -196,87 +201,87 @@ $yearlySalesDataJSON = json_encode($yearlySalesData);
     </div>
 
     <script>
-    function changeSalesView() {
-        var salesView = document.getElementById('salesView').value;
+        function changeSalesView() {
+            var salesView = document.getElementById('salesView').value;
 
-        // Hide all chart containers
-        document.getElementById('dailyChartContainer').style.display = 'none';
-        document.getElementById('weeklyChartContainer').style.display = 'none';
-        document.getElementById('monthlyChartContainer').style.display = 'none';
-        document.getElementById('yearlyChartContainer').style.display = 'none';
+            // Hide all chart containers
+            document.getElementById('dailyChartContainer').style.display = 'none';
+            document.getElementById('weeklyChartContainer').style.display = 'none';
+            document.getElementById('monthlyChartContainer').style.display = 'none';
+            document.getElementById('yearlyChartContainer').style.display = 'none';
 
-        // Display the selected chart container based on the chosen sales view
-        document.getElementById(salesView + 'ChartContainer').style.display = 'block';
-    }
+            // Display the selected chart container based on the chosen sales view
+            document.getElementById(salesView + 'ChartContainer').style.display = 'block';
+        }
 
 
-    // Monthly Sales Data
-    const monthlySalesData = <?= $monthlySalesDataJSON; ?>;
-    const monthlySalesChartCanvas = document.getElementById('monthlySalesChart').getContext('2d');
-    const monthlySalesChart = new Chart(monthlySalesChartCanvas, {
-        type: 'line',
-        data: monthlySalesData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
+        // Monthly Sales Data
+        const monthlySalesData = <?= $monthlySalesDataJSON; ?>;
+        const monthlySalesChartCanvas = document.getElementById('monthlySalesChart').getContext('2d');
+        const monthlySalesChart = new Chart(monthlySalesChartCanvas, {
+            type: 'line',
+            data: monthlySalesData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
+        });
 
-    // Daily Sales Data
-    const dailySalesData = <?= $dailySalesDataJSON; ?>;
-    const dailySalesChartCanvas = document.getElementById('dailySalesChart').getContext('2d');
-    const dailySalesChart = new Chart(dailySalesChartCanvas, {
-        type: 'line',
-        data: dailySalesData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
+        // Daily Sales Data
+        const dailySalesData = <?= $dailySalesDataJSON; ?>;
+        const dailySalesChartCanvas = document.getElementById('dailySalesChart').getContext('2d');
+        const dailySalesChart = new Chart(dailySalesChartCanvas, {
+            type: 'line',
+            data: dailySalesData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
+        });
 
-    // Weekly Sales Data
-    const weeklySalesData = <?= $weeklySalesDataJSON; ?>;
-    const weeklySalesChartCanvas = document.getElementById('weeklySalesChart').getContext('2d');
-    const weeklySalesChart = new Chart(weeklySalesChartCanvas, {
-        type: 'line',
-        data: weeklySalesData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
+        // Weekly Sales Data
+        const weeklySalesData = <?= $weeklySalesDataJSON; ?>;
+        const weeklySalesChartCanvas = document.getElementById('weeklySalesChart').getContext('2d');
+        const weeklySalesChart = new Chart(weeklySalesChartCanvas, {
+            type: 'line',
+            data: weeklySalesData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
+        });
 
-    // Yearly Sales Data
-    const yearlySalesData = <?= $yearlySalesDataJSON; ?>;
-    const yearlySalesChartCanvas = document.getElementById('yearlySalesChart').getContext('2d');
-    const yearlySalesChart = new Chart(yearlySalesChartCanvas, {
-        type: 'line',
-        data: yearlySalesData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
+        // Yearly Sales Data
+        const yearlySalesData = <?= $yearlySalesDataJSON; ?>;
+        const yearlySalesChartCanvas = document.getElementById('yearlySalesChart').getContext('2d');
+        const yearlySalesChart = new Chart(yearlySalesChartCanvas, {
+            type: 'line',
+            data: yearlySalesData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
+        });
     </script>
 </body>
 

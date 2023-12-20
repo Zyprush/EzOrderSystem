@@ -56,6 +56,8 @@ if (isset($_GET['update']) && isset($_GET['type'])) {
 
     <!-- custom css file link  -->
     <link rel="stylesheet" href="../css/admin_style.css">
+    <link rel="shortcut icon" href="../images/logo.png" type="image/x-icon">
+
 
 </head>
 
@@ -83,17 +85,15 @@ if (isset($_GET['update']) && isset($_GET['type'])) {
                 if ($select_account->rowCount() > 0) {
                     while ($fetch_accounts = $select_account->fetch(PDO::FETCH_ASSOC)) {
             ?>
-            <div class="box">
-                <p><?= ucfirst($account_type); ?> ID: <span><?= $fetch_accounts['id']; ?></span></p>
-                <p>Username: <span><?= $fetch_accounts['name']; ?></span></p>
-                <div class="flex-btn">
-                    <a href="admin_accounts.php?delete=<?= $fetch_accounts['id']; ?>&type=<?= $account_type; ?>"
-                        class="delete-btn" onclick="return confirm('Delete this account?');">Delete</a>
+                        <div class="box">
+                            <p><?= ucfirst($account_type); ?> ID: <span><?= $fetch_accounts['id']; ?></span></p>
+                            <p>Username: <span><?= $fetch_accounts['name']; ?></span></p>
+                            <div class="flex-btn">
+                                <a href="admin_accounts.php?delete=<?= $fetch_accounts['id']; ?>&type=<?= $account_type; ?>" class="delete-btn" onclick="return confirm('Delete this account?');">Delete</a>
 
-                    <a href="admin_accounts.php?update=<?= $fetch_accounts['name']; ?>&type=<?= $account_type; ?>"
-                        class="option-btn">Update</a>
-                </div>
-            </div>
+                                <a href="admin_accounts.php?update=<?= $fetch_accounts['name']; ?>&type=<?= $account_type; ?>" class="option-btn">Update</a>
+                            </div>
+                        </div>
             <?php
                     }
                 } else {

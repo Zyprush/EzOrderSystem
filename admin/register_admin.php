@@ -6,7 +6,7 @@ session_start();
 
 $admin_id = $_SESSION['admin_id'];
 
-if(!isset($admin_id)){
+if (!isset($admin_id)) {
    header('location:admin_login.php');
 };
 
@@ -60,6 +60,7 @@ if (isset($_POST['submit'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -71,37 +72,41 @@ if (isset($_POST['submit'])) {
 
    <!-- custom css file link  -->
    <link rel="stylesheet" href="../css/admin_style.css">
+   <link rel="shortcut icon" href="../images/logo.png" type="image/x-icon">
+
 
 </head>
+
 <body>
 
-<?php include '../components/admin_header.php' ?>
+   <?php include '../components/admin_header.php' ?>
 
-<!-- register admin section starts  -->
+   <!-- register admin section starts  -->
 
-<section class="form-container">
+   <section class="form-container">
 
-<form action="" method="POST">
-   <h3>Register new</h3>
-   <input type="text" name="name" maxlength="20" required placeholder="Enter your username" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
-   <input type="password" name="pass" maxlength="20" required placeholder="Enter your password" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
-   <input type="password" name="cpass" maxlength="20" required placeholder="Confirm your password" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+      <form action="" method="POST">
+         <h3>Register new</h3>
+         <input type="text" name="name" maxlength="20" required placeholder="Enter your username" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+         <input type="password" name="pass" maxlength="20" required placeholder="Enter your password" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+         <input type="password" name="cpass" maxlength="20" required placeholder="Confirm your password" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
 
-   <select name="account_type" id="account_type" class="box">
-      <option value="">--Select Account--</option>
-      <option value="cashier">Cashier</option>
-      <option value="kitchen">Kitchen</option>
-      <option value="admin">Admin</option>
-   </select>
+         <select name="account_type" id="account_type" class="box">
+            <option value="">--Select Account--</option>
+            <option value="cashier">Cashier</option>
+            <option value="kitchen">Kitchen</option>
+            <option value="admin">Admin</option>
+         </select>
 
-   <input type="submit" value="Register now" name="submit" class="btn">
-</form>
+         <input type="submit" value="Register now" name="submit" class="btn">
+      </form>
 
 
-</section>
+   </section>
 
-<!-- custom js file link  -->
-<script src="../js/admin_script.js"></script>
+   <!-- custom js file link  -->
+   <script src="../js/admin_script.js"></script>
 
 </body>
+
 </html>

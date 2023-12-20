@@ -7,7 +7,7 @@ session_start();
 $admin_id = $_SESSION['admin_id'];
 
 if (!isset($admin_id)) {
-   header('location:admin_login.php');
+    header('location:admin_login.php');
 };
 
 $create_table_ingredients = $conn->query("CREATE TABLE IF NOT EXISTS `ingredients` (
@@ -49,10 +49,10 @@ if (isset($_POST['add_ingredient'])) {
 
 if (isset($_GET['delete'])) {
 
-   $delete_id = $_GET['delete'];
-   $delete_product = $conn->prepare("DELETE FROM `ingredients` WHERE id = ?");
-   $delete_product->execute([$delete_id]);
-   header('location:addinventory.php');
+    $delete_id = $_GET['delete'];
+    $delete_product = $conn->prepare("DELETE FROM `ingredients` WHERE id = ?");
+    $delete_product->execute([$delete_id]);
+    header('location:addinventory.php');
 }
 
 
@@ -91,81 +91,83 @@ $ingredientDataJSON = json_encode($ingredientData);
     <!-- custom css file link  -->
     <link rel="stylesheet" href="../css/admin_style.css">
 
+    <link rel="shortcut icon" href="../images/logo.png" type="image/x-icon">
+
 
     <style>
-    .stock-levels-container {
-        border: var(--border);
-        border-radius: 5px;
-        padding: 25px;
-        box-shadow: inset;
-        margin: 30px;
-        margin-top: 60px;
-    }
+        .stock-levels-container {
+            border: var(--border);
+            border-radius: 5px;
+            padding: 25px;
+            box-shadow: inset;
+            margin: 30px;
+            margin-top: 60px;
+        }
 
-    /* Target the table body and set font size */
-    .display tbody td {
-        font-size: 1.5rem;
-        /* Adjust the font size as needed */
-    }
+        /* Target the table body and set font size */
+        .display tbody td {
+            font-size: 1.5rem;
+            /* Adjust the font size as needed */
+        }
 
-    /* Target the table header and set font size */
-    .display thead th {
-        font-size: 1.5rem;
-        /* Adjust the font size as needed */
-    }
+        /* Target the table header and set font size */
+        .display thead th {
+            font-size: 1.5rem;
+            /* Adjust the font size as needed */
+        }
 
-    /* Style for button links */
-    .button-link {
-        display: inline-block;
-        padding: 8px 12px;
-        text-decoration: none;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        background-color: #f0f0f0;
-        color: #333;
-        transition: background-color 0.3s, color 0.3s;
-    }
+        /* Style for button links */
+        .button-link {
+            display: inline-block;
+            padding: 8px 12px;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-    /* Hover effect for button links */
-    .button-link:hover {
-        background-color: #ddd;
-        color: #000;
-    }
+        /* Hover effect for button links */
+        .button-link:hover {
+            background-color: #ddd;
+            color: #000;
+        }
 
-    /* Style the dialog as needed */
-    .dialog {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        border: 1px solid #ccc;
-        background: #fff;
-        padding: 20px;
-        z-index: 1000;
-        /* Other styles for appearance */
-    }
+        /* Style the dialog as needed */
+        .dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #ccc;
+            background: #fff;
+            padding: 20px;
+            z-index: 1000;
+            /* Other styles for appearance */
+        }
 
-    .btn-add {
-        margin-top: 1rem;
-        display: inline-block;
-        font-size: 2rem;
-        padding: 1rem 3rem;
-        cursor: pointer;
-        text-transform: capitalize;
-        transition: .2s linear;
-    }
+        .btn-add {
+            margin-top: 1rem;
+            display: inline-block;
+            font-size: 2rem;
+            padding: 1rem 3rem;
+            cursor: pointer;
+            text-transform: capitalize;
+            transition: .2s linear;
+        }
 
-    .btn-primary {
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        float: right;
-        margin-bottom: 25px;
-        /* Add other styles as needed */
-    }
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+            margin-bottom: 25px;
+            /* Add other styles as needed */
+        }
     </style>
 </head>
 
@@ -193,8 +195,8 @@ $ingredientDataJSON = json_encode($ingredientData);
             </thead>
             <tbody>
                 <?php
-                    $stock_query = $conn->query("SELECT id, name, quantity, unit FROM ingredients");
-                    while ($row = $stock_query->fetch(PDO::FETCH_ASSOC)) {
+                $stock_query = $conn->query("SELECT id, name, quantity, unit FROM ingredients");
+                while ($row = $stock_query->fetch(PDO::FETCH_ASSOC)) {
                     echo "<tr>
                     <td>{$row['name']}</td>
                     <td>{$row['quantity']}</td>
@@ -205,8 +207,8 @@ $ingredientDataJSON = json_encode($ingredientData);
                     </td>
 
                     </tr>";
-        }
-        ?>
+                }
+                ?>
             </tbody>
         </table>
     </div>
@@ -219,10 +221,8 @@ $ingredientDataJSON = json_encode($ingredientData);
             <section class="add-products">
                 <form action="" method="POST" enctype="multipart/form-data">
                     <h3>Add Item</h3>
-                    <input type="text" required placeholder="Enter name" name="ingredient_name"
-                        maxlength="100" class="box">
-                    <input type="number" min="0" step="0.1" max="9999999999" required placeholder="Quantity"
-                        name="ingredient_quantity" class="box">
+                    <input type="text" required placeholder="Enter name" name="ingredient_name" maxlength="100" class="box">
+                    <input type="number" min="0" step="0.1" max="9999999999" required placeholder="Quantity" name="ingredient_quantity" class="box">
                     <select name="ingredient_unit" class="box" required>
                         <option value="" disabled selected>Select unit</option>
                         <option value="kg">kg</option>
@@ -242,64 +242,64 @@ $ingredientDataJSON = json_encode($ingredientData);
     <script src="../js/admin_script.js"></script>
 
     <script>
-    $(document).ready(function() {
-        $('#ingTable').DataTable(); // Initialize DataTable
-    });
+        $(document).ready(function() {
+            $('#ingTable').DataTable(); // Initialize DataTable
+        });
 
-    // Get the dialog, open button, and cancel button elements
-    var productDialog = document.getElementById('productDialog');
-    var openDialogBtn = document.getElementById('openDialog');
-    var cancelDialogBtn = document.getElementById('cancelDialog');
+        // Get the dialog, open button, and cancel button elements
+        var productDialog = document.getElementById('productDialog');
+        var openDialogBtn = document.getElementById('openDialog');
+        var cancelDialogBtn = document.getElementById('cancelDialog');
 
-    // Function to open the dialog
-    openDialogBtn.addEventListener('click', function() {
-        productDialog.style.display = 'block';
-    });
+        // Function to open the dialog
+        openDialogBtn.addEventListener('click', function() {
+            productDialog.style.display = 'block';
+        });
 
-    // Function to close the dialog
-    cancelDialogBtn.addEventListener('click', function() {
-        productDialog.style.display = 'none';
-    });
-
-    // Close the dialog when clicking outside the dialog content
-    window.addEventListener('click', function(event) {
-        if (event.target === productDialog) {
+        // Function to close the dialog
+        cancelDialogBtn.addEventListener('click', function() {
             productDialog.style.display = 'none';
-        }
-    });
+        });
+
+        // Close the dialog when clicking outside the dialog content
+        window.addEventListener('click', function(event) {
+            if (event.target === productDialog) {
+                productDialog.style.display = 'none';
+            }
+        });
 
 
-    // Retrieve the PHP-generated JSON data
-    const ingredientData = <?php echo $ingredientDataJSON; ?>;
+        // Retrieve the PHP-generated JSON data
+        const ingredientData = <?php echo $ingredientDataJSON; ?>;
 
-    // Extract names and quantities from the fetched data
-    const ingredientNames = ingredientData.map(item => item.name);
-    const ingredientQuantities = ingredientData.map(item => item.quantity);
+        // Extract names and quantities from the fetched data
+        const ingredientNames = ingredientData.map(item => item.name);
+        const ingredientQuantities = ingredientData.map(item => item.quantity);
 
-    // Get the canvas element
-    const ctx = document.getElementById('ingredientChart').getContext('2d');
+        // Get the canvas element
+        const ctx = document.getElementById('ingredientChart').getContext('2d');
 
-    // Create the bar chart using Chart.js
-    const ingredientChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ingredientNames,
-            datasets: [{
-                label: 'Ingredient Quantities',
-                data: ingredientQuantities,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+        // Create the bar chart using Chart.js
+        const ingredientChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ingredientNames,
+                datasets: [{
+                    label: 'Ingredient Quantities',
+                    data: ingredientQuantities,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
+        });
     </script>
 
 </body>

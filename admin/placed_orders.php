@@ -7,23 +7,23 @@ session_start();
 $admin_id = $_SESSION['admin_id'];
 
 if (!isset($admin_id)) {
-   header('location:admin_login.php');
+    header('location:admin_login.php');
 };
 
 if (isset($_POST['update_payment'])) {
 
-   $order_id = $_POST['order_id'];
-   $payment_status = $_POST['payment_status'];
-   $update_status = $conn->prepare("UPDATE `orders` SET payment_status = ? WHERE id = ?");
-   $update_status->execute([$payment_status, $order_id]);
-   $message[] = 'payment status updated!';
+    $order_id = $_POST['order_id'];
+    $payment_status = $_POST['payment_status'];
+    $update_status = $conn->prepare("UPDATE `orders` SET payment_status = ? WHERE id = ?");
+    $update_status->execute([$payment_status, $order_id]);
+    $message[] = 'payment status updated!';
 }
 
 if (isset($_GET['delete'])) {
-   $delete_id = $_GET['delete'];
-   $delete_order = $conn->prepare("DELETE FROM `orders` WHERE id = ?");
-   $delete_order->execute([$delete_id]);
-   header('location:placed_orders.php');
+    $delete_id = $_GET['delete'];
+    $delete_order = $conn->prepare("DELETE FROM `orders` WHERE id = ?");
+    $delete_order->execute([$delete_id]);
+    header('location:placed_orders.php');
 }
 
 // Get today's date
@@ -65,25 +65,28 @@ if (isset($_GET['show_all'])) {
     <!-- custom css file link  -->
     <link rel="stylesheet" href="../css/admin_style.css">
 
+    <link rel="shortcut icon" href="../images/logo.png" type="image/x-icon">
+
+
     <style>
-    .orders-table {
-        border: var(--border);
-        border-radius: 5px;
-        padding: 25px;
-        margin-bottom: 20px;
-    }
+        .orders-table {
+            border: var(--border);
+            border-radius: 5px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
 
-    /* Target the table body and set font size */
-    #ordersDataTable tbody td {
-        font-size: 1.5rem;
-        /* Adjust the font size as needed */
-    }
+        /* Target the table body and set font size */
+        #ordersDataTable tbody td {
+            font-size: 1.5rem;
+            /* Adjust the font size as needed */
+        }
 
-    /* Target the table header and set font size */
-    #ordersDataTable thead th {
-        font-size: 16px;
-        /* Adjust the font size as needed */
-    }
+        /* Target the table header and set font size */
+        #ordersDataTable thead th {
+            font-size: 16px;
+            /* Adjust the font size as needed */
+        }
     </style>
 
 </head>
@@ -103,27 +106,26 @@ if (isset($_GET['show_all'])) {
             if ($select_orders->rowCount() > 0) {
                 while ($fetch_orders = $select_orders->fetch(PDO::FETCH_ASSOC)) {
             ?>
-            <div class="box">
-                <!-- Display order details -->
-                <p>Placed on: <span><?= $fetch_orders['placed_on']; ?></span></p>
-                <p>Table Number: <span><?= $fetch_orders['address']; ?></span></p>
-                <p>Total Products: <span><?= $fetch_orders['total_products']; ?></span></p>
-                <p>Total Price: <span>₱<?= $fetch_orders['total_price']; ?></span></p>
-                <p>Payment Method: <span><?= $fetch_orders['method']; ?></span></p>
-                <form action="" method="POST">
-                    <input type="hidden" name="order_id" value="<?= $fetch_orders['id']; ?>">
-                    <select name="payment_status" class="drop-down">
-                        <option value="" selected disabled><?= $fetch_orders['payment_status']; ?></option>
-                        <option value="pending">Pending</option>
-                        <option value="completed">Completed</option>
-                    </select>
-                    <div class="flex-btn">
-                        <input type="submit" value="Update" class="btn" name="update_payment">
-                        <a href="placed_orders.php?delete=<?= $fetch_orders['id']; ?>" class="delete-btn"
-                            onclick="return confirm('Delete this order?');">Delete</a>
+                    <div class="box">
+                        <!-- Display order details -->
+                        <p>Placed on: <span><?= $fetch_orders['placed_on']; ?></span></p>
+                        <p>Table Number: <span><?= $fetch_orders['address']; ?></span></p>
+                        <p>Total Products: <span><?= $fetch_orders['total_products']; ?></span></p>
+                        <p>Total Price: <span>₱<?= $fetch_orders['total_price']; ?></span></p>
+                        <p>Payment Method: <span><?= $fetch_orders['method']; ?></span></p>
+                        <form action="" method="POST">
+                            <input type="hidden" name="order_id" value="<?= $fetch_orders['id']; ?>">
+                            <select name="payment_status" class="drop-down">
+                                <option value="" selected disabled><?= $fetch_orders['payment_status']; ?></option>
+                                <option value="pending">Pending</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                            <div class="flex-btn">
+                                <input type="submit" value="Update" class="btn" name="update_payment">
+                                <a href="placed_orders.php?delete=<?= $fetch_orders['id']; ?>" class="delete-btn" onclick="return confirm('Delete this order?');">Delete</a>
+                            </div>
+                        </form>
                     </div>
-                </form>
-            </div>
             <?php
                 }
             } else {
@@ -174,9 +176,9 @@ if (isset($_GET['show_all'])) {
     <script src="../js/admin_script.js"></script>
 
     <script>
-    $(document).ready(function() {
-        $('#ordersDataTable').DataTable();
-    });
+        $(document).ready(function() {
+            $('#ordersDataTable').DataTable();
+        });
     </script>
 
 </body>

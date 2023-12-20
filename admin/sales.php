@@ -7,7 +7,7 @@ session_start();
 $admin_id = $_SESSION['admin_id'];
 
 if (!isset($admin_id)) {
-   header('location:admin_login.php');
+    header('location:admin_login.php');
 }
 
 // Fetch monthly sales data from 'orders' table for completed orders
@@ -44,7 +44,7 @@ $yearlySales = [];
 while ($row = $select_monthly_sales->fetch(PDO::FETCH_ASSOC)) {
     // Get month name from its number
     $monthName = date('M', mktime(0, 0, 0, $row['month'], 1));
-    
+
     // Store month name and sales data in arrays
     $months[] = $monthName;
     $sales[] = $row['monthly_total'];
@@ -54,7 +54,7 @@ while ($row = $select_monthly_sales->fetch(PDO::FETCH_ASSOC)) {
 while ($row = $select_daily_sales->fetch(PDO::FETCH_ASSOC)) {
     // Get day name
     $dayName = $row['day_name'];
-    
+
     // Store day name and daily sales data in arrays
     $days[] = $dayName;
     $dailySales[] = $row['daily_total'];
@@ -64,7 +64,7 @@ while ($row = $select_daily_sales->fetch(PDO::FETCH_ASSOC)) {
 while ($row = $select_weekly_sales->fetch(PDO::FETCH_ASSOC)) {
     // Get week number
     $weekNumber = $row['week_number'];
-    
+
     // Store week number and weekly sales data in arrays
     $weeks[] = "Week " . ($weekNumber + 1);
     $weeklySales[] = $row['weekly_total'];
@@ -74,7 +74,7 @@ while ($row = $select_weekly_sales->fetch(PDO::FETCH_ASSOC)) {
 while ($row = $select_yearly_sales->fetch(PDO::FETCH_ASSOC)) {
     // Get year
     $year = $row['year'];
-    
+
     // Store year and yearly sales data in arrays
     $years[] = $year;
     $yearlySales[] = $row['yearly_total'];
@@ -187,166 +187,169 @@ if ($get_top_products->rowCount() > 0) {
     <!-- custom css file link  -->
     <link rel="stylesheet" href="../css/admin_style.css">
 
+    <link rel="shortcut icon" href="../images/logo.png" type="image/x-icon">
+
+
     <!-- Add Chart.js library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
     <style>
-    /* Custom CSS styles for sales summary */
-    .sales-summary-container {
-        border: var(--border);
-        border-radius: 5px;
-        padding: 20px;
-        margin-top: 20px;
-    }
-
-    .sales-summary-title {
-        font-size: 2.5em;
-        font-weight: bold;
-        margin-bottom: 15px;
-    }
-
-    .sales-summary {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        margin-top: 20px;
-    }
-
-    .total-box,
-    .daily-sales,
-    .weekly-sales {
-        width: calc(33.33% - 20px);
-        background-color: #f9f9f9;
-        border: 1px solid #ccc;
-        padding: 15px;
-        box-sizing: border-box;
-        margin-bottom: 20px;
-        border-radius: 5px;
-    }
-
-    /* Adjust font size */
-    .total-box h3,
-    .daily-sales h3,
-    .weekly-sales h3 {
-        font-size: 2.2em;
-        margin-bottom: 10px;
-    }
-
-    /* Styles for the top products container */
-    .top-products-container {
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-
-    /* Flexbox styles for product cards */
-    .product-cards {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 20px;
-        /* Adjust the gap between cards */
-    }
-
-    .product-card {
-        flex: 0 0 calc(33.33% - 20px);
-        /* Set width for each card */
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Media query for responsive layout */
-    @media (max-width: 768px) {
-        .product-card {
-            flex: 0 0 calc(50% - 20px);
-            /* Adjust width for smaller screens */
+        /* Custom CSS styles for sales summary */
+        .sales-summary-container {
+            border: var(--border);
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
         }
-    }
 
-    .title-top-products {
-        font-size: 2.5rem;
-        margin-bottom: 15px;
-    }
+        .sales-summary-title {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
 
-    /* Product card container */
-    .product-card {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease-in-out;
-    }
+        .sales-summary {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
 
-    .product-card:hover {
-        transform: translateY(-5px);
-        /* Optional: Apply a subtle hover effect */
-    }
+        .total-box,
+        .daily-sales,
+        .weekly-sales {
+            width: calc(33.33% - 20px);
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 15px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
 
-    /* Product image */
-    .product-image {
-        width: 100%;
-        max-height: 300px;
-        /* Set max height for images */
-        overflow: hidden;
-        /* Hide overflow if images exceed max height */
-        border-radius: 8px;
-        margin-bottom: 10px;
-        /* Optional: Add margin bottom */
-    }
+        /* Adjust font size */
+        .total-box h3,
+        .daily-sales h3,
+        .weekly-sales h3 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
 
-    .product-image img {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-        /* Maintain aspect ratio and cover the container */
-        transition: transform 0.3s ease-in-out;
-    }
+        /* Styles for the top products container */
+        .top-products-container {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
 
-    .product-image:hover img {
-        transform: scale(1.1);
-        /* Optional: Apply a zoom effect on image hover */
-    }
+        /* Flexbox styles for product cards */
+        .product-cards {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            /* Adjust the gap between cards */
+        }
 
-    /* Product details */
-    .product-details {
-        text-align: center;
-    }
+        .product-card {
+            flex: 0 0 calc(33.33% - 20px);
+            /* Set width for each card */
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
 
-    .product-name {
-        margin-bottom: 5px;
-        font-size: 1.2rem;
-        font-weight: bold;
-        /* Optional: Make the product name bold */
-    }
+        /* Media query for responsive layout */
+        @media (max-width: 768px) {
+            .product-card {
+                flex: 0 0 calc(50% - 20px);
+                /* Adjust width for smaller screens */
+            }
+        }
 
-    .product-sold {
-        font-size: 1rem;
-        color: #666;
-        /* Optional: Adjust the color */
-    }
+        .title-top-products {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
 
-    .sales-container {
-        margin: 5px;
-        border-radius: 5px;
-        border: solid 2px;
-        font-size: 1.5rem;
-        padding: 20px;
-    }
+        /* Product card container */
+        .product-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
 
-    .sales-charts {
-        padding: 20px;
-        width: 100%;
-        /* Set a fixed width for chart containers */
-        height: 400px;
-        /* Set a fixed height for chart containers */
-    }
+        .product-card:hover {
+            transform: translateY(-5px);
+            /* Optional: Apply a subtle hover effect */
+        }
+
+        /* Product image */
+        .product-image {
+            width: 100%;
+            max-height: 300px;
+            /* Set max height for images */
+            overflow: hidden;
+            /* Hide overflow if images exceed max height */
+            border-radius: 8px;
+            margin-bottom: 10px;
+            /* Optional: Add margin bottom */
+        }
+
+        .product-image img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            /* Maintain aspect ratio and cover the container */
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .product-image:hover img {
+            transform: scale(1.1);
+            /* Optional: Apply a zoom effect on image hover */
+        }
+
+        /* Product details */
+        .product-details {
+            text-align: center;
+        }
+
+        .product-name {
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            /* Optional: Make the product name bold */
+        }
+
+        .product-sold {
+            font-size: 1rem;
+            color: #666;
+            /* Optional: Adjust the color */
+        }
+
+        .sales-container {
+            margin: 5px;
+            border-radius: 5px;
+            border: solid 2px;
+            font-size: 1.5rem;
+            padding: 20px;
+        }
+
+        .sales-charts {
+            padding: 20px;
+            width: 100%;
+            /* Set a fixed width for chart containers */
+            height: 400px;
+            /* Set a fixed height for chart containers */
+        }
     </style>
 </head>
 
@@ -364,21 +367,21 @@ if ($get_top_products->rowCount() > 0) {
             <h2 class="title-top-products">Top 3 Products by Sales Quantity</h2>
             <div class="product-cards">
                 <?php foreach ($top_products as $product) : ?>
-                <div class="product-card">
-                    <?php if (!empty($product['image'])) : ?>
-                    <div class="product-image">
-                        <img src="../uploaded_img/<?= $product['image'] ?>" alt="<?= $product['name'] ?>">
+                    <div class="product-card">
+                        <?php if (!empty($product['image'])) : ?>
+                            <div class="product-image">
+                                <img src="../uploaded_img/<?= $product['image'] ?>" alt="<?= $product['name'] ?>">
+                            </div>
+                        <?php endif; ?>
+                        <div class="product-details">
+                            <p class="product-name"><?= $product['name'] ?></p>
+                            <p class="product-sold">Sold: <?= $product['quantity_sold'] ?></p>
+                        </div>
                     </div>
-                    <?php endif; ?>
-                    <div class="product-details">
-                        <p class="product-name"><?= $product['name'] ?></p>
-                        <p class="product-sold">Sold: <?= $product['quantity_sold'] ?></p>
-                    </div>
-                </div>
                 <?php endforeach; ?>
             </div>
         </div>
-        
+
         <!-- Sales View Selection -->
         <div class="sales-container">
             <label for="salesView">Select Sales View:</label>
@@ -410,7 +413,7 @@ if ($get_top_products->rowCount() > 0) {
             </div>
 
         </div>
-        
+
 
     </section>
 
@@ -419,87 +422,87 @@ if ($get_top_products->rowCount() > 0) {
     <script src="../js/admin_script.js"></script>
 
     <script>
-    function changeSalesView() {
-        var salesView = document.getElementById('salesView').value;
+        function changeSalesView() {
+            var salesView = document.getElementById('salesView').value;
 
-        // Hide all chart containers
-        document.getElementById('dailyChartContainer').style.display = 'none';
-        document.getElementById('weeklyChartContainer').style.display = 'none';
-        document.getElementById('monthlyChartContainer').style.display = 'none';
-        document.getElementById('yearlyChartContainer').style.display = 'none';
+            // Hide all chart containers
+            document.getElementById('dailyChartContainer').style.display = 'none';
+            document.getElementById('weeklyChartContainer').style.display = 'none';
+            document.getElementById('monthlyChartContainer').style.display = 'none';
+            document.getElementById('yearlyChartContainer').style.display = 'none';
 
-        // Display the selected chart container based on the chosen sales view
-        document.getElementById(salesView + 'ChartContainer').style.display = 'block';
-    }
+            // Display the selected chart container based on the chosen sales view
+            document.getElementById(salesView + 'ChartContainer').style.display = 'block';
+        }
 
 
-    // Monthly Sales Data
-    const monthlySalesData = <?= $monthlySalesDataJSON; ?>;
-    const monthlySalesChartCanvas = document.getElementById('monthlySalesChart').getContext('2d');
-    const monthlySalesChart = new Chart(monthlySalesChartCanvas, {
-        type: 'line',
-        data: monthlySalesData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
+        // Monthly Sales Data
+        const monthlySalesData = <?= $monthlySalesDataJSON; ?>;
+        const monthlySalesChartCanvas = document.getElementById('monthlySalesChart').getContext('2d');
+        const monthlySalesChart = new Chart(monthlySalesChartCanvas, {
+            type: 'line',
+            data: monthlySalesData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
+        });
 
-    // Daily Sales Data
-    const dailySalesData = <?= $dailySalesDataJSON; ?>;
-    const dailySalesChartCanvas = document.getElementById('dailySalesChart').getContext('2d');
-    const dailySalesChart = new Chart(dailySalesChartCanvas, {
-        type: 'line',
-        data: dailySalesData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
+        // Daily Sales Data
+        const dailySalesData = <?= $dailySalesDataJSON; ?>;
+        const dailySalesChartCanvas = document.getElementById('dailySalesChart').getContext('2d');
+        const dailySalesChart = new Chart(dailySalesChartCanvas, {
+            type: 'line',
+            data: dailySalesData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
+        });
 
-    // Weekly Sales Data
-    const weeklySalesData = <?= $weeklySalesDataJSON; ?>;
-    const weeklySalesChartCanvas = document.getElementById('weeklySalesChart').getContext('2d');
-    const weeklySalesChart = new Chart(weeklySalesChartCanvas, {
-        type: 'line',
-        data: weeklySalesData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
+        // Weekly Sales Data
+        const weeklySalesData = <?= $weeklySalesDataJSON; ?>;
+        const weeklySalesChartCanvas = document.getElementById('weeklySalesChart').getContext('2d');
+        const weeklySalesChart = new Chart(weeklySalesChartCanvas, {
+            type: 'line',
+            data: weeklySalesData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
+        });
 
-    // Yearly Sales Data
-    const yearlySalesData = <?= $yearlySalesDataJSON; ?>;
-    const yearlySalesChartCanvas = document.getElementById('yearlySalesChart').getContext('2d');
-    const yearlySalesChart = new Chart(yearlySalesChartCanvas, {
-        type: 'line',
-        data: yearlySalesData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
+        // Yearly Sales Data
+        const yearlySalesData = <?= $yearlySalesDataJSON; ?>;
+        const yearlySalesChartCanvas = document.getElementById('yearlySalesChart').getContext('2d');
+        const yearlySalesChart = new Chart(yearlySalesChartCanvas, {
+            type: 'line',
+            data: yearlySalesData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
+        });
     </script>
 </body>
 

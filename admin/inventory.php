@@ -7,7 +7,7 @@ session_start();
 $admin_id = $_SESSION['admin_id'];
 
 if (!isset($admin_id)) {
-   header('location:admin_login.php');
+    header('location:admin_login.php');
 }
 
 if (isset($_GET['delete'])) {
@@ -22,7 +22,7 @@ if (isset($_GET['delete'])) {
     $delete_cart = $conn->prepare("DELETE FROM `cart` WHERE pid = ?");
     $delete_cart->execute([$delete_id]);
     header('location:products.php');
- }
+}
 
 ?>
 
@@ -50,42 +50,45 @@ if (isset($_GET['delete'])) {
     <!-- DataTables JavaScript -->
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
+    <link rel="shortcut icon" href="../images/logo.png" type="image/x-icon">
+    
+
     <style>
-    .stock-levels-container {
-        border: var(--border);
-        border-radius: 5px;
-        padding: 25px;
-    }
+        .stock-levels-container {
+            border: var(--border);
+            border-radius: 5px;
+            padding: 25px;
+        }
 
-    /* Target the table body and set font size */
-    #stockTable tbody td {
-        font-size: 1.5rem;
-        /* Adjust the font size as needed */
-    }
+        /* Target the table body and set font size */
+        #stockTable tbody td {
+            font-size: 1.5rem;
+            /* Adjust the font size as needed */
+        }
 
-    /* Target the table header and set font size */
-    #stockTable thead th {
-        font-size: 16px;
-        /* Adjust the font size as needed */
-    }
+        /* Target the table header and set font size */
+        #stockTable thead th {
+            font-size: 16px;
+            /* Adjust the font size as needed */
+        }
 
-    /* Style for button links */
-    .button-link {
-        display: inline-block;
-        padding: 8px 12px;
-        text-decoration: none;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        background-color: #f0f0f0;
-        color: #333;
-        transition: background-color 0.3s, color 0.3s;
-    }
+        /* Style for button links */
+        .button-link {
+            display: inline-block;
+            padding: 8px 12px;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-    /* Hover effect for button links */
-    .button-link:hover {
-        background-color: #ddd;
-        color: #000;
-    }
+        /* Hover effect for button links */
+        .button-link:hover {
+            background-color: #ddd;
+            color: #000;
+        }
     </style>
 
 </head>
@@ -114,7 +117,7 @@ if (isset($_GET['delete'])) {
                     <?php
                     $stock_query = $conn->query("SELECT id, name, quantity_available FROM products");
                     while ($row = $stock_query->fetch(PDO::FETCH_ASSOC)) {
-                    echo "<tr>
+                        echo "<tr>
                     <td>{$row['name']}</td>
                     <td>{$row['quantity_available']}</td>
                     <td>
@@ -123,8 +126,8 @@ if (isset($_GET['delete'])) {
                     </td>
 
                     </tr>";
-        }
-        ?>
+                    }
+                    ?>
                 </tbody>
             </table>
 
@@ -137,9 +140,9 @@ if (isset($_GET['delete'])) {
     <!-- custom js file link  -->
     <script src="../js/admin_script.js"></script>
     <script>
-    $(document).ready(function() {
-        $('#stockTable').DataTable(); // Initialize DataTable
-    });
+        $(document).ready(function() {
+            $('#stockTable').DataTable(); // Initialize DataTable
+        });
     </script>
 </body>
 
